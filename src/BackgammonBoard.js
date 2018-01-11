@@ -1,16 +1,19 @@
 import React from 'react';
 import DiceArea from './DiceArea';
+import PlayerTurn from './PlayerTurn';
 
 class BackgammonBoard extends React.Component {
   onClick(id) {
+    console.log('ab')
     if (this.isActive(id)) {
+      console.log('cd')
       this.props.moves.moveStone(id);
       this.props.game.endTurn();
     }
   }
 
   isActive(id) {
-    if (this.props.ctx.winner !== null) return false;
+    if (this.props.ctx.gameover !== null) return false;
     // if (this.props.G.cells[id] !== null) return false;
     return true;
   }
@@ -49,10 +52,13 @@ class BackgammonBoard extends React.Component {
 
     return (
       <div id="board">
-        {fields}
+        <div id="fields">
+          {fields}
+        </div>
         <br/>
         {winner}
         <DiceArea openDice={this.props.G.openDice} />
+        <PlayerTurn currentPlayer={this.props.ctx.currentPlayer} />
       </div>
     );
   }
