@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 // import './App.css';
 
-import Client from 'boardgame.io/client';
-import Game from 'boardgame.io/game';
+import {Client} from 'boardgame.io/client';
+import {Game} from 'boardgame.io/core';
 import BackgammonBoard from './BackgammonBoard'
 
 const Dice = {
@@ -67,9 +67,12 @@ const Backgammon = Game({
       return {...G, board, openDice};      // don't mutate original state.
     }
   },
-
-  victory: (G, ctx) => {
-    return IsVictory(G.board) ? ctx.currentPlayer : null;
+  flow: {
+    endGameIf: (G, ctx) => {
+      if (IsVictory(G.board)) {
+        return ctx.currentPlayer;
+      }
+    }
   }
 });
 

@@ -4,7 +4,7 @@ class DiceArea extends React.Component {
   onClick(id) {
     if (this.isActive(id)) {
       this.props.moves.moveStone(id);
-      this.props.endTurn();
+      this.props.game.endTurn();
     }
   }
 

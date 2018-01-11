@@ -5,7 +5,7 @@ class BackgammonBoard extends React.Component {
   onClick(id) {
     if (this.isActive(id)) {
       this.props.moves.moveStone(id);
-      this.props.endTurn();
+      this.props.game.endTurn();
     }
   }
 
@@ -43,13 +43,14 @@ class BackgammonBoard extends React.Component {
     }
 
     let winner = '';
-    if (this.props.ctx.winner !== null) {
-      winner = <div>Winner: {this.props.ctx.winner}</div>;
-    }
+    // if (this.props.ctx.gameover !== null) {
+    //   winner = <div>Winner: {this.props.ctx.gameover}</div>;
+    // }
 
     return (
       <div id="board">
         {fields}
+        <br/>
         {winner}
         <DiceArea openDice={this.props.G.openDice} />
       </div>
