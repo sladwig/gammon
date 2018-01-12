@@ -31,7 +31,8 @@ class Fields extends React.Component {
                 openDice={this.props.openDice} 
                 board={this.props.board}
                 selected={this.state.selected}
-                selecting={this.selecting} />
+                selecting={this.selecting}
+                makeMove={this.props.makeMove} />
       );
     }
 

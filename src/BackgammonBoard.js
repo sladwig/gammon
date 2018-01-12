@@ -11,6 +11,16 @@ class BackgammonBoard extends React.Component {
   //   return true;
   // }
 
+  rollTheDice = () => {
+    if (this.props.G.openDice.length === 0) {
+      this.props.moves.rollDice()
+    }
+  }
+  makeMove = (from, dice) => {
+    console.log('making move', from, dice, this.props.moves)
+    this.props.moves.moveStone(from, dice)
+  }
+
 
   render() {
 
@@ -23,10 +33,11 @@ class BackgammonBoard extends React.Component {
       <div id="board">
         <Fields board={this.props.G.board} 
                 ctx={this.props.ctx} 
-                openDice={this.props.G.openDice}/>
+                openDice={this.props.G.openDice}
+                makeMove={this.makeMove}/>
         <br/>
         {winner}
-        <DiceArea openDice={this.props.G.openDice} />
+        <DiceArea openDice={this.props.G.openDice} onClick={this.rollTheDice}/>
         <PlayerTurn currentPlayer={this.props.ctx.currentPlayer} />
       </div>
     );
