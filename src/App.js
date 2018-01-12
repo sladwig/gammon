@@ -4,12 +4,7 @@ import React, { Component } from 'react';
 import {Client} from 'boardgame.io/client';
 import {Game} from 'boardgame.io/core';
 import BackgammonBoard from './BackgammonBoard'
-
-const Dice = {
-  roll() {
-    return Math.ceil(Math.random() * 6);
-  }
-}
+import Dice from './Dice'
 
 function IsVictory(board) {
   // Return true if `stones` is in a winning configuration.
