@@ -4,7 +4,7 @@ import Dice from './Dice'
 
 function IsVictory(board) {
   // Return true if `stones` is in a winning configuration.
-  return board[0].length === 15 || board[25] === 15 
+  return board[0].length === 15 || board[25].length === 15 
 }
 
 const Backgammon = Game({
