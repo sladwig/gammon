@@ -2,6 +2,17 @@ import React from 'react';
 import Field from './Field';
 
 class Fields extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected: null
+    };
+  }
+
+  selecting = (id) => {
+    this.setState({selected: id})
+    // this.state.selected = id
+  }
 
   render() {
     
@@ -13,7 +24,14 @@ class Fields extends React.Component {
       if ([0,25,26].includes(i)) continue;
 
       fields.push(
-        <Field key={i} id={i} boardField={this.props.board[i]} ctx={this.props.ctx} />
+        <Field key={i} 
+                id={i} 
+                boardField={this.props.board[i]} 
+                ctx={this.props.ctx} 
+                openDice={this.props.openDice} 
+                board={this.props.board}
+                selected={this.state.selected}
+                selecting={this.selecting} />
       );
     }
 

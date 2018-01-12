@@ -1,6 +1,6 @@
 import {Game} from 'boardgame.io/core';
 import Dice from './Dice'
-
+import moveDirection from './moveDirection'
 
 function IsVictory(board) {
   // Return true if `stones` is in a winning configuration.
@@ -46,13 +46,14 @@ const Backgammon = Game({
       let board = [...G.board];
       let openDice = [...G.openDice];
 
-      let diceValue = ctx.currentPlayer === "0" ? dice*-1 : dice
+      let diceValue = moveDirection(ctx.currentPlayer) * dice;
 
+      let to = at+diceValue;
       // move stone
-      board[at+diceValue].push(board[at].pop());
+      board[to].push(board[at].pop());
 
       // remove actual dice from open Dice
-      let firstIndex = openDice.findIndex(function(result) { return result === dice}) 
+      let firstIndex = openDice.findIndex((result) => { return result === dice}) 
       openDice.splice(firstIndex, 1)
 
       return {...G, board, openDice};      // don't mutate original state.

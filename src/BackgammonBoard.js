@@ -4,6 +4,14 @@ import PlayerTurn from './PlayerTurn';
 import Fields from './Fields';
 
 class BackgammonBoard extends React.Component {
+  // I think we should implement an isActive here?
+  // isActive(id) {
+  //   if (this.props.ctx.gameover !== null) return false;
+  //   // if (this.props.G.cells[id] !== null) return false;
+  //   return true;
+  // }
+
+
   render() {
 
     let winner = '';
@@ -13,7 +21,9 @@ class BackgammonBoard extends React.Component {
 
     return (
       <div id="board">
-        <Fields board={this.props.G.board} ctx={this.props.ctx}/>
+        <Fields board={this.props.G.board} 
+                ctx={this.props.ctx} 
+                openDice={this.props.G.openDice}/>
         <br/>
         {winner}
         <DiceArea openDice={this.props.G.openDice} />
