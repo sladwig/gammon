@@ -6,21 +6,9 @@ class Field extends React.Component {
     console.log('ab')
     if (!this.props.selected) {
       // no selection
-      if (!this.hasStones()) {
-        return;
-      } else {
-        console.log('i have stones')
-      }
-      if (!this.hasStonesOfCurrentPlayer()) {
-        return;
-      } else {
-        console.log('even of currentPlayer')
-      }
-      if (!this.hasPossibleMoves()) {
-        return;
-      } else {
-        console.log('i have possible moves')
-      }
+      if (!this.hasStones()) { return } else { console.log('i have stones') }
+      if (!this.hasStonesOfCurrentPlayer()) { return } else { console.log('even of currentPlayer') }
+      if (!this.hasPossibleMoves()) { return; } else { console.log('i have possible moves')}
 
       console.log('set selected ' + id)
       this.props.selecting(this.props.id)
