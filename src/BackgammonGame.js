@@ -64,7 +64,19 @@ const Backgammon = Game({
       if (IsVictory(G.board)) {
         return ctx.currentPlayer;
       }
-    }
+    },
+    phases: [
+      {
+        name: 'rolling dice',
+        allowedMoves: ['rollDice'],
+        endPhaseIf: G => ( G.openDice.length > 0 ),
+      },
+      {
+        name: 'move stones', 
+        allowedMoves: ['moveStone'],
+        endPhaseIf: G => ( G.openDice.length === 0 ),
+      }
+    ]
   }
 });
 
