@@ -1,5 +1,7 @@
 const moveDirection = function(currentPlayer) {
-  return currentPlayer === "0" ? -1 : 1;
+  let result = currentPlayer === "0" ? -1 : 1;
+  console.log(result)
+  return result
 }
 
 export default moveDirection;

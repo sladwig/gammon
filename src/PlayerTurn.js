@@ -14,7 +14,8 @@ class PlayerTurn extends React.Component {
     let player = this.props.currentPlayer === "0" ? "black" : "white"   //.G.openDice.toString();
     return (
       <div id="player-turn">
-        Player: {player}
+        Player: {player}<br/>`
+        Phase: {this.props.phase}
       </div>
     );
   }

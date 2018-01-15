@@ -42,13 +42,25 @@ const Backgammon = Game({
       return {...G, openDice}; // don't mutate original state.
     },
     moveStone(G, ctx, at, dice) {
+      if (!at) { return } else { console.log('stoping move no at')}
+      if (!dice) { return } else { console.log('stoping move no dice')}
+
       // don't mutate original state.
       let board = [...G.board];
       let openDice = [...G.openDice];
 
       let diceValue = moveDirection(ctx.currentPlayer) * dice;
-
       let to = at+diceValue;
+      console.log('value: ', diceValue, to)
+      
+      // sanitize to
+      // TODO: here we can DRY it up in calculate Destination
+      if (to < 1) { to = 1}
+      if (to > 24) { to = 24}
+
+      // check if we have a stone
+      if (board[at].length === 0) {return}
+      
       // move stone
       board[to].push(board[at].pop());
 
@@ -65,6 +77,7 @@ const Backgammon = Game({
         return ctx.currentPlayer;
       }
     },
+    endTurnIf: G => ( G.openDice.length === 0 ),
     phases: [
       {
         name: 'rolling dice',
@@ -74,7 +87,8 @@ const Backgammon = Game({
       {
         name: 'move stones', 
         allowedMoves: ['moveStone'],
-        endPhaseIf: G => ( G.openDice.length === 0 ),
+        onPhaseEnd: (G) => {console.log('phase ending moving'); return G},
+        endPhaseIf: G => ( G.openDice.length === 0 )
       }
     ]
   }

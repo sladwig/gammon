@@ -1,9 +1,14 @@
 import React from 'react';
 import moveDirection from './moveDirection'
+import calculateDestination from './calculateDestination'
 
 class Field extends React.Component {
+  constructor(props) {
+    super(props);
+    this.calculateDestination = calculateDestination.bind(this);
+  }
+
   onClick(id) {
-    console.log('ab')
     if (!this.props.selected) {
       // no selection
       if (!this.hasStones()) { return } else { console.log('i have stones') }
@@ -15,10 +20,11 @@ class Field extends React.Component {
     } else {
       // we have a selected
       // check if possible destination -> make move
-      console.log('possible ', this.possibleDestinations())
+
       if (this.isPossibleDestination()) {
         let diceValue = this.props.selected + (moveDirection(this.props.ctx.currentPlayer) * id) ;
         this.props.makeMove(this.props.selected, diceValue)
+        // this.props.selecting(null)
 
       } else {
       // else try to select
@@ -39,20 +45,20 @@ class Field extends React.Component {
   isPossibleDestination() {
     // console.log('possible to ', this.possibleDestinations(), this.props.id, this.props.id+1, this.possibleDestinations().includes(23), (this.possibleDestinations()[0] || 1 ) + 2)
     return this.props.openDice.map((dice) => {
-      return this.props.id + dice
+      return this.props.id + moveDirection(dice)
     }).includes(this.props.selected)
   }
   possibleDestinations() {
     if (!this.hasStonesOfCurrentPlayer()) { return [] }
     return this.possibleMoves().map(this.calculateDestination); 
   }
-  calculateDestination = (dice) => {
-    // here is some logic needed for home out scenario
-    let to = this.props.id + (moveDirection(this.props.ctx.currentPlayer) * dice)
-    if (to < 1) { to = 1}
-    if (to > 24) { to = 24}
-    return to;
-  }
+  // calculateDestination = (dice) => {
+  //   // here is some logic needed for home out scenario
+  //   let to = this.props.id + (moveDirection(this.props.ctx.currentPlayer) * dice)
+  //   if (to < 1) { to = 1}
+  //   if (to > 24) { to = 24}
+  //   return to;
+  // }
   possibleMoves() {
     return this.props.openDice.filter((dice) => {
       let to = this.calculateDestination(dice) 
