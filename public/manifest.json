@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Gammon",
+  "name": "Gammon the Backgammon",
   "icons": [
     {
       "src": "favicon.ico",
