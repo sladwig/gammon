@@ -1,45 +1,61 @@
+// moving is a helper object with all the necessities
+// around moving stones around
+// it considers the current player, but doesn't validate
+// if a move is legal or not, for this you should use
+// the functions provided by ./board.js
+// it does however calculate all the positions correctly
+
+const player = {
+  isWhite(currentPlayer) {
+    return currentPlayer === "1"
+  },
+  isBlack(currentPlayer) {
+    return currentPlayer === "0"
+  }
+}
+
 const moving = { 
   direction(currentPlayer) {
-    // console.log(currentPlayer)
-    // is black
-    if (currentPlayer === "0") {return -1}
-    // is white
-    if (currentPlayer === "1") {return 1}
-    // else
+    if (player.isBlack(currentPlayer)) {return -1}
+    if (player.isWhite(currentPlayer)) {return 1}
     return 0
   },
 
+  counterDirection(currentPlayer) {
+    return this.direction(currentPlayer) * -1;
+  },
+
   from(currentPlayer, at, dice) {
-    return (this.direction(currentPlayer)*-1) * dice + at
+    return (this.counterDirection(currentPlayer)) * dice + at;
+  },
+
+  sanitizeTo(to) {
+    if (to < 0) { to = 0 }
+    if (to > 25) { to = 25 }
+    return to;
   },
 
   to(currentPlayer, at, dice) {
-    return this.direction(currentPlayer) * dice + at
+    return this.sanitizeTo(this.direction(currentPlayer) * dice + at);
+  },
+
+  // position of stone after moving out of bank
+  out(currentPlayer, dice) {
+    if (player.isBlack(currentPlayer)) {
+      return this.to(currentPlayer, 25, dice);
+    }
+    if (player.isWhite(currentPlayer)) {
+      return this.to(currentPlayer, 0, dice);
+    }
+    return 26; // maybe returning false is ok 
+  },
+
+  distance(from, to) {
+    return Math.abs(from - to);
   }
+
 }
-// #mayMoveTo(board, currentPlayer, at, dice)
-// 0 < to < 25
 
-// im groben drei 'phasen'
-// 1: normales spiel
-// 2: spieler ist out muss wieder rein
-// 3: spieler ist home spielt seine steine raus
 
-// raufspringbar
-// frei, nur ein gegner, eigene
-// im umkehrschluss eigentlich nur nich, 
-// wenn mehr als ein gegenspieler da ist
-
-// out erreichbar wenn spieler im home
-// rauskommen
-
-// #isHome(board, currentPlayer)
-// #isOut(board, currentPlayer)
-// #isMyColor(board, currentPlayer, at)
-// #isFreeToGo(board, currentPlayer, to)
-// #distance(from, to)
-// #sanitize(to) - maybe better naming
-//
-
-export default moving;
+export { moving as default, player};
 // {cameFrom, moveTo, moveDirection};

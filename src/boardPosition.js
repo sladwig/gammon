@@ -15,7 +15,7 @@ const boardPosition = {
     [1,1,1,1,1],[],[],[],[],[0,0],
     [],
     []],
-  empty: Array(26).fill([])
+  empty: Array(27).fill([])
 }
 
 export default boardPosition;
