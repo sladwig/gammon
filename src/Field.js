@@ -1,6 +1,7 @@
 import React from 'react';
-import moveDirection from './moveDirection'
 import calculateDestination from './calculateDestination'
+import moving from './moving';
+
 
 class Field extends React.Component {
   constructor(props) {
@@ -15,20 +16,18 @@ class Field extends React.Component {
       if (!this.hasStonesOfCurrentPlayer()) { return } else { console.log('even of currentPlayer') }
       if (!this.hasPossibleMoves()) { return; } else { console.log('i have possible moves')}
 
-      console.log('set selected ' + id)
       this.props.selecting(this.props.id)
     } else {
       // we have a selected
       // check if possible destination -> make move
 
       if (this.isPossibleDestination()) {
-        let diceValue = this.props.selected + (moveDirection(this.props.ctx.currentPlayer) * id) ;
+        let diceValue = this.props.selected + (moving.direction(this.props.ctx.currentPlayer) * id) ;
         this.props.makeMove(this.props.selected, diceValue)
-        // this.props.selecting(null)
+        this.props.selecting(null)
 
       } else {
       // else try to select
-        console.log('set selected ' + id)
         this.props.selecting(this.props.id)
       }
     }
@@ -43,10 +42,12 @@ class Field extends React.Component {
     return this.possibleMoves().length > 0
   }
   isPossibleDestination() {
-    // console.log('possible to ', this.possibleDestinations(), this.props.id, this.props.id+1, this.possibleDestinations().includes(23), (this.possibleDestinations()[0] || 1 ) + 2)
+    return this.isPossibleDestinationOf().includes(this.props.selected)
+  }
+  isPossibleDestinationOf() {
     return this.props.openDice.map((dice) => {
-      return this.props.id + moveDirection(dice)
-    }).includes(this.props.selected)
+      return moving.from(this.props.ctx.currentPlayer, this.props.id, dice)
+    })
   }
   possibleDestinations() {
     if (!this.hasStonesOfCurrentPlayer()) { return [] }
@@ -88,7 +89,6 @@ class Field extends React.Component {
     };
 
     let selected = this.props.selected === this.props.id ? "*" : ""
-    // console.log('i am ', this.props.id, ' possible ', this.isPossibleDestination())
     let possible = this.isPossibleDestination() ? '?' : ""
 
     return (

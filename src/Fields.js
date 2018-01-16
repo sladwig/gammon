@@ -10,6 +10,7 @@ class Fields extends React.Component {
   }
 
   selecting = (id) => {
+    console.log('selecting: ', id)
     this.setState({selected: id})
     // this.state.selected = id
   }
