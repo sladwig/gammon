@@ -132,14 +132,16 @@ it('correctly checks if a field is whites color', () => {
   expect(board.isMyColor(boardPosition.start, white, 1)).toBe(true)
   expect(board.isMyColor(boardPosition.start, white, 2)).toBe(false)
   expect(board.isMyColor(boardPosition.start, white, 6)).toBe(false)
-  expect(board.isMyColor(boardPosition.start, white, 0)).toBe(true)  
+  expect(board.isMyColor(boardPosition.start, white, 0)).toBe(false) 
+  expect(board.isMyColor(playerWhite('isBarAndRestHome'), white, 25)).toBe(true) 
 });
 
 it('correctly checks if a field is blacks color', () => {
   expect(board.isMyColor(boardPosition.start, black, 1)).toBe(false)
   expect(board.isMyColor(boardPosition.start, black, 2)).toBe(false)
   expect(board.isMyColor(boardPosition.start, black, 6)).toBe(true)
-  expect(board.isMyColor(boardPosition.start, black, 25)).toBe(true)
+  expect(board.isMyColor(boardPosition.start, black, 25)).toBe(false)
+  expect(board.isMyColor(playerBlack('isBarAndRestHome'), black, 25)).toBe(true)
 });
 
 it('correctly checks if a field is free', () => {

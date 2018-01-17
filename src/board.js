@@ -92,8 +92,10 @@ const board = {
     // since normaly this are not the colors of the player 
     // either occupied by opponent or free, you could never
     // move back in from the bar 
-    if (at==25 && player.isBlack(currentPlayer)) return true;
-    if (at==0 && player.isWhite(currentPlayer)) return true;
+    if (at===25 && player.isBlack(currentPlayer) && 
+      board[26].includes(parseInt(currentPlayer))) return true;
+    if (at===0 && player.isWhite(currentPlayer) && 
+      board[26].includes(parseInt(currentPlayer))) return true;
 
     return board[at].includes(parseInt(currentPlayer))
   },
