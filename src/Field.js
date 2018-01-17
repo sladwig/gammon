@@ -1,15 +1,9 @@
 import React from 'react';
-import calculateDestination from './calculateDestination'
 import moving from './moving';
 import board from './board';
 
 
 class Field extends React.Component {
-  constructor(props) {
-    super(props);
-    this.calculateDestination = calculateDestination.bind(this);
-  }
-
   onClick(id) {
     if (!this.props.selected) {
       this.trySelecting(id)
