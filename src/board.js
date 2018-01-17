@@ -58,7 +58,7 @@ const board = {
     return true;
   },
   isBar(board, currentPlayer) {
-    return board[26].includes(parseInt(currentPlayer))
+    return board[26].includes(parseInt(currentPlayer, 10))
   },
   isHome(board, currentPlayer) {
     if (this.isBar(board, currentPlayer)) return false;
@@ -93,17 +93,16 @@ const board = {
     // either occupied by opponent or free, you could never
     // move back in from the bar 
     if (at===25 && player.isBlack(currentPlayer) && 
-      board[26].includes(parseInt(currentPlayer))) return true;
+      board[26].includes(parseInt(currentPlayer, 10))) return true;
     if (at===0 && player.isWhite(currentPlayer) && 
-      board[26].includes(parseInt(currentPlayer))) return true;
+      board[26].includes(parseInt(currentPlayer, 10))) return true;
 
-    return board[at].includes(parseInt(currentPlayer))
+    return board[at].includes(parseInt(currentPlayer, 10))
   },
   // TODO: in use?
   isFree(board, currentPlayer, at) {
     return board[at].length === 0 
   },
-  // TODO: in use?
   notMoreThanOne(board, at) {
     return board[at].length < 2;
   },
