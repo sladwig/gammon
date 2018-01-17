@@ -39,7 +39,7 @@ const moving = {
     return this.sanitizeTo(this.direction(currentPlayer) * dice + at);
   },
 
-  // position of stone after moving out of bank
+  // position of stone after moving out of bar
   out(currentPlayer, dice) {
     if (player.isBlack(currentPlayer)) {
       return this.to(currentPlayer, 25, dice);

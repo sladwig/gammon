@@ -55,7 +55,7 @@ it('correctly moves out', () => {
   expect(moving.to(player.black, 6,6)).toBe(0)
 });
 
-it('correctly bank out', () => {
+it('correctly bar out', () => {
   expect(moving.out(player.white, 1)).toBe(1)
   expect(moving.out(player.white, 2)).toBe(2)
   expect(moving.out(player.white, 3)).toBe(3)
