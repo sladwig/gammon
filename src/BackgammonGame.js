@@ -1,6 +1,7 @@
 import {Game} from 'boardgame.io/core';
 import Dice from './Dice'
 import moving from './moving'
+import boarding from './board'
 import boardPosition from './boardPosition'
 
 function IsVictory(board) {
@@ -35,11 +36,16 @@ const Backgammon = Game({
       let board = [...G.board];
       let openDice = [...G.openDice];
 
-      let to = moving.to(ctx.currentPlayer, at, dice)
+      // only continue if move is legal
+      if (!boarding.mayMoveTo(board, ctx.currentPlayer, at, dice)) {return}
 
-      // check if we have a stone
-      if (board[at].length === 0) {return}
+      let to = moving.to(ctx.currentPlayer, at, dice)
       
+      // throw out
+      if (!boarding.isMyColor(board, ctx.currentPlayer, to) &&
+        boarding.notMoreThanOne(board, to)) {
+        board[26].push(board[to].pop());
+      }
       // move stone
       board[to].push(board[at].pop());
 

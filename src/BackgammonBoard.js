@@ -12,7 +12,6 @@ class BackgammonBoard extends React.Component {
   // }
 
   rollTheDice = () => {
-    console.log('diceice')
     if (this.props.G.openDice.length === 0) {
       this.props.moves.rollDice()
     }
