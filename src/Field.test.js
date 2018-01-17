@@ -15,7 +15,7 @@ it('has Stones', () => {
           boardField={[1,1,1]} 
           ctx={{}} 
           openDice={[]} 
-          board={{}}
+          board={boardPosition.empty}
           selected={false}
           selecting={()=>{}}
           makeMove={()=>{}} />
@@ -31,7 +31,7 @@ it('has no Stones', () => {
           boardField={[]} 
           ctx={{}} 
           openDice={[]} 
-          board={{}}
+          board={boardPosition.empty}
           selected={false}
           selecting={()=>{}}
           makeMove={()=>{}} />
@@ -48,7 +48,7 @@ it('white has Stones', () => {
           boardField={[1, 1]} 
           ctx={whitePlayer} 
           openDice={[]} 
-          board={{}}
+          board={boardPosition.empty}
           selected={false}
           selecting={()=>{}}
           makeMove={()=>{}} />
@@ -63,7 +63,7 @@ it('white has no black Stones', () => {
           boardField={[0, 0]} 
           ctx={whitePlayer} 
           openDice={[]} 
-          board={{}}
+          board={boardPosition.empty}
           selected={false}
           selecting={()=>{}}
           makeMove={()=>{}} />
@@ -78,7 +78,7 @@ it('white has no empty Stones', () => {
           boardField={[]} 
           ctx={whitePlayer} 
           openDice={[]} 
-          board={{}}
+          board={boardPosition.empty}
           selected={false}
           selecting={()=>{}}
           makeMove={()=>{}} />
@@ -95,7 +95,7 @@ it('black has Stones', () => {
           boardField={[0, 0]} 
           ctx={blackPlayer} 
           openDice={[]} 
-          board={{}}
+          board={boardPosition.empty}
           selected={false}
           selecting={()=>{}}
           makeMove={()=>{}} />
@@ -110,7 +110,7 @@ it('black has no white Stones', () => {
           boardField={[1, 1]} 
           ctx={blackPlayer} 
           openDice={[]} 
-          board={{}}
+          board={boardPosition.empty}
           selected={false}
           selecting={()=>{}}
           makeMove={()=>{}} />
@@ -125,7 +125,7 @@ it('black has no empty Stones', () => {
           boardField={[]} 
           ctx={blackPlayer} 
           openDice={[]} 
-          board={{}}
+          board={boardPosition.empty}
           selected={false}
           selecting={()=>{}}
           makeMove={()=>{}} />
@@ -163,6 +163,46 @@ it('isPossibleDestinationOf for white', () => {
           makeMove={()=>{}} />
   );
   expect(component.getInstance().isPossibleDestinationOf()).toEqual([4,2])
+});
+
+ start: [[],
+    [1,1],[],[],[],[],[0,0,0,0,0],
+    [],[0,0,0],[],[],[],[1,1,1,1,1],
+    [0,0,0,0,0],[],[],[],[1,1,1],[],
+    [1,1,1,1,1],[],[],[],[],[0,0],
+    [],
+    []],
+
+it('isPossibleDestination for black and respects possible moves', () => {
+  const component = renderer.create(
+    <Field key={1} 
+          id={1} 
+          boardField={[1,1]} 
+          ctx={blackPlayer} 
+          openDice={[2,5]} 
+          board={boardPosition.start}
+          selected={6}
+          selecting={()=>{}}
+          makeMove={()=>{}} />
+  );
+  expect(component.getInstance().isPossibleDestinationOf()).toEqual([3,6])
+  expect(component.getInstance().isPossibleDestination()).toEqual(false)
+
+});
+it('isPossibleDestination for white and respects possible moves', () => {
+  const component = renderer.create(
+    <Field key={1} 
+          id={24} 
+          boardField={[0,0]} 
+          ctx={whitePlayer} 
+          openDice={[2,5]} 
+          board={boardPosition.start}
+          selected={19}
+          selecting={()=>{}}
+          makeMove={()=>{}} />
+  );
+  expect(component.getInstance().isPossibleDestinationOf()).toEqual([22,19])
+  expect(component.getInstance().isPossibleDestination()).toEqual(false)
 });
 
 

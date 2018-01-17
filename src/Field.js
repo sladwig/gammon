@@ -43,20 +43,24 @@ class Field extends React.Component {
   hasPossibleMoves() {
     return this.possibleMoves().length > 0
   }
-  isPossibleDestination() {
-    return this.isPossibleDestinationOf().includes(this.props.selected)
-  }
-  isPossibleDestinationOf() {
-    return this.props.openDice.map((dice) => {
-      return moving.from(this.props.ctx.currentPlayer, this.props.id, dice)
-    })
-  }
   // maybe better to name possibleDice
   possibleMoves() { 
     return this.props.openDice.filter((dice) => {
       return board.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, this.props.id, dice)
     });
   }  
+
+
+  // if this is a selectable field  
+  isPossibleDestination() {
+    return !board.isOccupied(this.props.board, this.props.ctx.currentPlayer, this.props.id) 
+      && this.isPossibleDestinationOf().includes(this.props.selected)
+  }
+  isPossibleDestinationOf() {
+    return this.props.openDice.map((dice) => {
+      return moving.from(this.props.ctx.currentPlayer, this.props.id, dice)
+    })
+  }
 
 
 
