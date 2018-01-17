@@ -35,14 +35,7 @@ const Backgammon = Game({
       let board = [...G.board];
       let openDice = [...G.openDice];
 
-      let diceValue = moving.direction(ctx.currentPlayer) * dice;
-      let to = at+diceValue;
-      console.log('value: ', diceValue, to)
-      
-      // sanitize to
-      // TODO: here we can DRY it up in calculate Destination
-      if (to < 1) { to = 1}
-      if (to > 24) { to = 24}
+      let to = moving.to(ctx.currentPlayer, at, dice)
 
       // check if we have a stone
       if (board[at].length === 0) {return}

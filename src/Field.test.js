@@ -135,38 +135,6 @@ it('black has no empty Stones', () => {
 
 
 
-// possibleDestinations
-it('calculates possibleDestinations for black', () => {
-  const component = renderer.create(
-    <Field key={1} 
-          id={6} 
-          boardField={[0,0]} 
-          ctx={blackPlayer} 
-          openDice={[2,4]} 
-          board={boardPosition.empty}
-          selected={6}
-          selecting={()=>{}}
-          makeMove={()=>{}} />
-  );
-  expect(component.getInstance().possibleDestinations()).toEqual([4,2])
-});
-
-it('calculates possibleDestinations for white', () => {
-  const component = renderer.create(
-    <Field key={1} 
-          id={6} 
-          boardField={[1,1]} 
-          ctx={whitePlayer} 
-          openDice={[2,4]} 
-          board={boardPosition.empty}
-          selected={6}
-          selecting={()=>{}}
-          makeMove={()=>{}} />
-  );
-  expect(component.getInstance().possibleDestinations()).toEqual([8,10])
-});
-
-
 // isPossibleDestinationOf
 it('isPossibleDestinationOf for black', () => {
   const component = renderer.create(

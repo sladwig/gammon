@@ -12,12 +12,9 @@ class Fields extends React.Component {
   selecting = (id) => {
     console.log('selecting: ', id)
     this.setState({selected: id})
-    // this.state.selected = id
   }
 
   render() {
-    
-
     let fields = [];
 
     for (let i=0; i < this.props.board.length; i++) {

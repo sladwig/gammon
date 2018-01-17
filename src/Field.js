@@ -1,6 +1,7 @@
 import React from 'react';
 import calculateDestination from './calculateDestination'
 import moving from './moving';
+import board from './board';
 
 
 class Field extends React.Component {
@@ -11,26 +12,27 @@ class Field extends React.Component {
 
   onClick(id) {
     if (!this.props.selected) {
-      // no selection
-      if (!this.hasStones()) { return } else { console.log('i have stones') }
-      if (!this.hasStonesOfCurrentPlayer()) { return } else { console.log('even of currentPlayer') }
-      if (!this.hasPossibleMoves()) { return; } else { console.log('i have possible moves')}
-
-      this.props.selecting(this.props.id)
+      this.trySelecting(id)
     } else {
       // we have a selected
       // check if possible destination -> make move
-
       if (this.isPossibleDestination()) {
-        let diceValue = this.props.selected + (moving.direction(this.props.ctx.currentPlayer) * id) ;
+        let diceValue = moving.distance(this.props.selected, id) ;
         this.props.makeMove(this.props.selected, diceValue)
         this.props.selecting(null)
 
       } else {
-      // else try to select
-        this.props.selecting(this.props.id)
+        // else try to select
+        this.trySelecting(id)
       }
     }
+  }
+  trySelecting(id) {
+    if (!this.hasStones()) { return } else { console.log('i have stones') }
+    if (!this.hasStonesOfCurrentPlayer()) { return } else { console.log('even of currentPlayer') }
+    if (!this.hasPossibleMoves()) { return; } else { console.log('i have possible moves')}
+
+    this.props.selecting(id)
   }
   hasStones(){
     return this.props.boardField.length > 0;
@@ -49,30 +51,10 @@ class Field extends React.Component {
       return moving.from(this.props.ctx.currentPlayer, this.props.id, dice)
     })
   }
-  possibleDestinations() {
-    if (!this.hasStonesOfCurrentPlayer()) { return [] }
-    return this.possibleMoves().map(this.calculateDestination); 
-  }
-  // calculateDestination = (dice) => {
-  //   // here is some logic needed for home out scenario
-  //   let to = this.props.id + (moveDirection(this.props.ctx.currentPlayer) * dice)
-  //   if (to < 1) { to = 1}
-  //   if (to > 24) { to = 24}
-  //   return to;
-  // }
-  possibleMoves() {
+  // maybe better to name possibleDice
+  possibleMoves() { 
     return this.props.openDice.filter((dice) => {
-      let to = this.calculateDestination(dice) 
-      // this.props.id + (moveDirection(this.props.ctx.currentPlayer) * dice);
-      
-      // darf bewegt werden, wenn to = frei
-      // darf bewegt werden wenn to = nur 1 gegnerisches feld
-      // darf bewegt werden, wenn to = eigene steine
-      // darf raus bewegt werden, wenn to < 1..24 < to (je nach spieler) und alle in home
-
-      if (this.props.board[to].length === 0) {return true}
-
-      return false;
+      return board.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, this.props.id, dice)
     });
   }  
 
