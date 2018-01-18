@@ -3,23 +3,44 @@ import moving from './moving';
 import board from './board';
 
 
+function fromOut(id) {
+  if (id === 25 || id === 0) return 26
+  return id
+}
+
+
 class Field extends React.Component {
   onClick(id) {
-    if (!this.props.selected) {
+    // nothing selected -> select
+    if (!this.props.selected && this.props.selected !== 0) {
       this.trySelecting(id)
-    } else {
-      // we have a selected
-      // check if possible destination -> make move
-      if (this.isPossibleDestination()) {
-        let diceValue = moving.distance(this.props.selected, id) ;
-        this.props.makeMove(this.props.selected, diceValue)
-        this.props.selecting(null)
-
-      } else {
-        // else try to select
-        this.trySelecting(id)
-      }
+      return 
+    } 
+    // deselect if same value
+    if (this.props.selected===id) {
+      this.props.selecting(null)
+      return
     }
+
+    // we have a selected
+    // check if possible destination -> make move
+    if (this.isPossibleDestination()) {
+      let diceValue = moving.distance(this.props.selected, id);
+      this.props.makeMove(this.props.selected, diceValue)
+      this.props.selecting(null)
+      return
+    } 
+    // home out situation
+    if (board.isHome(this.props.board, this.props.ctx.currentPlayer) 
+      && board.isBiggestStone(this.props.board, this.props.ctx.currentPlayer, this.props.selected)) {
+      let diceValue = this.props.openDice.reduce((a,b) => {return Math.max(a,b)})
+      this.props.makeMove(this.props.selected, diceValue)
+      this.props.selecting(null)
+      return
+    }
+
+    // else try to select
+    this.trySelecting(id)    
   }
   trySelecting(id) {
     if (!this.hasStones()) { return } else { console.log('i have stones') }
@@ -29,10 +50,10 @@ class Field extends React.Component {
     this.props.selecting(id)
   }
   hasStones(){
-    return this.props.boardField.length > 0;
+    return this.props.board[this.props.id].length > 0;
   }
   hasStonesOfCurrentPlayer() {
-    return this.props.ctx.currentPlayer === String(this.props.boardField[0])
+    return board.isMyColor(this.props.board, this.props.ctx.currentPlayer, fromOut(this.props.id))
   }
   hasPossibleMoves() {
     return this.possibleMoves().length > 0
@@ -40,7 +61,7 @@ class Field extends React.Component {
   // maybe better to name possibleDice
   possibleMoves() { 
     return this.props.openDice.filter((dice) => {
-      return board.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, this.props.id, dice)
+      return board.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, fromOut(this.props.id), dice)
     });
   }  
 
@@ -76,7 +97,7 @@ class Field extends React.Component {
           id="field-{this.props.id}"
           key={this.props.id}
           onClick={() => this.onClick(this.props.id)}>
-        {this.props.boardField}{selected}{possible}
+        {this.props.board[this.props.id]}{selected}{possible}
       </div>
     );
   }

@@ -57,6 +57,15 @@ const board = {
 
     return true;
   },
+  hasPossibleMoves(board, currentPlayer, dices) {
+    return dices.filter((dice) => { 
+      let result = []
+      for (let at = 0; at < 26; at++) {
+        result.push(this.mayMoveTo(board, currentPlayer, at, dice))
+      }
+      return result.includes(true)
+    }).length > 0
+  },
   isBar(board, currentPlayer) {
     return board[26].includes(parseInt(currentPlayer, 10))
   },
@@ -103,6 +112,7 @@ const board = {
   isFree(board, currentPlayer, at) {
     return board[at].length === 0 
   },
+  // TODO: in use?
   notMoreThanOne(board, at) {
     return board[at].length < 2;
   },
@@ -110,6 +120,10 @@ const board = {
   moreThanOne(board, at) {
     return !this.notMoreThanOne(board, at);
   },
+  exactlyOne(board, at) {
+    return board[at].length === 1;
+  },
+
 }
 
 export default board;

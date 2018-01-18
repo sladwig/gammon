@@ -1,68 +1,10 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import generateBoard from './generateBoard'
+import {boardScenarios} from './generateBoard'
 import board from './board';
 import boardPosition from './boardPosition';
 
-const boardScenarios = {
-  isHome: [
-    [[],
-    [1,1,1],[1,1,1],[1,1,1],[1,1,1],[0,0],[1,1,1],
-    [],[0,0,0],[],[],[],[],
-    [0,0,0,0,0],[],[],[],[],[],
-    [],[],[],[],[],[0,0,0,0,0],
-    []]
-    , []],
-  isHomeAndHasSomeOut: [
-    [[1,1],
-    [1,1],[1,1],[1,1,1],[1,1,1],[0,0],[1,1,1],
-    [],[0,0,0],[],[],[],[],
-    [0,0,0,0,0],[],[],[],[],[],
-    [],[],[],[],[],[0,0,0,0,0],
-    []]
-    , []],
-  bothHome: [
-    [[1,1],
-    [1],[1,1],[1,1,1],[1,1,1,1],[],[1,1,1],
-    [],[],[],[],[],[],
-    [],[],[],[],[],[],
-    [],[],[],[0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0],
-    []]
-    , []],
-  isAlmostHomeAndHasSomeOut: [
-    [[1,1],
-    [1,1],[1,1],[1,1,1],[1,1,1],[0,0],[1,1],
-    [],[0,0,0],[],[],[],[],
-    [0,0,0,0,0],[],[],[],[],[],
-    [],[],[],[],[1],[0,0,0,0,0],
-    []]
-    , []],
-  isBarAndRestHome: [
-    [[1,1],
-    [1,1],[1,1],[1,1,1],[1,1,1],[0,0],[1,1],
-    [],[0,0,0],[],[],[],[],
-    [0,0,0,0,0],[],[],[],[],[],
-    [],[],[],[],[],[0,0,0,0,0],
-    []]
-    , [1]],
-  isAlmostDone: [
-    [[1,1,1,1,1,1,1,1,1,1],
-    [1,1,1],[1],[1],[],[0,0],[],
-    [],[0,0],[0],[],[],[],
-    [0,0,0,0,0],[],[],[],[],[],
-    [],[],[],[],[],[0,0,0,0,0],
-    []]
-    , []],
-  hasWon: [
-    [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [],[],[],[],[0,0],[],
-    [],[0,0,0],[],[],[],[],
-    [0,0,0,0,0],[],[],[],[],[],
-    [],[],[],[],[],[0,0,0,0,0],
-    []]
-    , []],
-
-}
 
 const white = "1"
 const black = "0"
@@ -174,6 +116,20 @@ it('correctly checks if a field has more than one stone', () => {
   expect(board.moreThanOne(playerBlack('bothHome'), 14)).toBe(false)
 });
 
+it('correctly checks if a field has exactly one stone', () => {
+  expect(board.exactlyOne(playerWhite('bothHome'), 24)).toBe(true)
+  expect(board.exactlyOne(playerWhite('bothHome'), 23)).toBe(false)
+  expect(board.exactlyOne(playerWhite('bothHome'), 14)).toBe(false)
+  expect(board.exactlyOne(playerWhite('bothHome'), 4)).toBe(true)
+  expect(board.exactlyOne(playerWhite('bothHome'), 3)).toBe(false)
+
+  expect(board.exactlyOne(playerBlack('bothHome'), 1)).toBe(true)
+  expect(board.exactlyOne(playerBlack('bothHome'), 2)).toBe(false)
+  expect(board.exactlyOne(playerBlack('bothHome'), 14)).toBe(false)
+  expect(board.exactlyOne(playerBlack('bothHome'), 21)).toBe(true)
+  expect(board.exactlyOne(playerBlack('bothHome'), 22)).toBe(false)
+});
+
 
 it('correctly checks if a field is movable to', () => {
   expect(board.mayMoveTo(playerBlack('isAlmostHomeAndHasSomeOut'), black, 5, 2)).toBe(false)
@@ -229,3 +185,13 @@ it('correctly checks if a field is movable to and is possible to move to if in b
   expect(board.mayMoveTo(playerWhite('isBarAndRestHome'), white, 0, 1)).toBe(false)
   expect(board.mayMoveTo(playerWhite('isBarAndRestHome'), white, 0, 2)).toBe(true)
 });
+
+
+it('correctly checks if a player has possible moves', () => {
+  expect(board.hasPossibleMoves(playerBlack('cantMove'), black, [1, 3])).toBe(false)
+  expect(board.hasPossibleMoves(playerBlack('cantMove'), white, [1, 3])).toBe(true)
+  expect(board.hasPossibleMoves(playerBlack('isAlmostDone'), black, [1, 3])).toBe(true)
+  expect(board.hasPossibleMoves(playerBlack('isBarAndRestHome'), black, [1, 1])).toBe(false)
+  expect(board.hasPossibleMoves(playerBlack('isBarAndRestHome'), black, [1, 4])).toBe(true)
+});
+

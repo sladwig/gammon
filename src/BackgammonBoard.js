@@ -24,9 +24,9 @@ class BackgammonBoard extends React.Component {
   render() {
 
     let winner = '';
-    // if (this.props.ctx.gameover !== null) {
-    //   winner = <div>Winner: {this.props.ctx.gameover}</div>;
-    // }
+    if (this.props.ctx.gameover !== null) {
+      winner = <div>Winner: {this.props.ctx.gameover}</div>;
+    }
 
     return (
       <div id="board">
