@@ -1,0 +1,39 @@
+
+<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='0 0 80 80'>
+  <circle cx="40" cy="40" r="8" />
+</svg>
+
+<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='0 0 80 80'>
+  <circle cx="18" cy="18" r="8" />
+  <circle cx="62" cy="62" r="8" />
+</svg>
+
+<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='0 0 80 80'>
+  <circle cx="18" cy="18" r="8" />
+  <circle cx="40" cy="40" r="8" />
+  <circle cx="62" cy="62" r="8" />
+</svg>
+
+<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='0 0 80 80'>
+  <circle cx="18" cy="18" r="8" />
+  <circle cx="62" cy="18" r="8" />
+  <circle cx="18" cy="62" r="8" />
+  <circle cx="62" cy="62" r="8" />
+</svg>
+  
+<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='0 0 80 80'>
+  <circle cx="18" cy="18" r="8" />
+  <circle cx="62" cy="18" r="8" />
+  <circle cx="18" cy="62" r="8" />
+  <circle cx="62" cy="62" r="8" />
+  <circle cx="40" cy="40" r="8" />
+</svg>
+
+<svg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='0 0 80 80'>
+  <circle cx="18" cy="18" r="8" />
+  <circle cx="40" cy="18" r="8" />
+  <circle cx="62" cy="18" r="8" />
+  <circle cx="18" cy="62" r="8" />
+  <circle cx="40" cy="62" r="8" />
+  <circle cx="62" cy="62" r="8" />
+</svg>
