@@ -142,7 +142,7 @@
         border: 4px solid rgba(220,220,220,0.9);
       }
       .token.black {
-        background: rgb(15,15,15);
+        background: rgb(25,25,25);
         border-color: rgb(74,74,74);
       }
       .token.selected {
@@ -162,6 +162,7 @@
   .dice-black, .dice-white{
     display: flex;
     justify-content: space-around;
+    z-index: 100;
   }
 
    .dice-black {
@@ -279,7 +280,16 @@
           <div class='token'></div>
         </div>
         <div class="field"></div>
-        <div class="field">&nbsp;</div>
+        <div class="field">
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token black'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+        </div>
         <div class="field">
           <div class='token'></div>
           <div class='token selected'></div>
@@ -304,15 +314,32 @@
 
         <div class="field"></div>
         <div class="field"></div>
-        <div class="field"></div>
-        <div class="field"></div>
-        <div class="field"></div>
+        <div class="field">
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+        </div>
+        <div class="field">
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token black'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+        </div>
+        <div class="field">
+          <div class='token'></div>
+          <div class='token'></div>
+          <div class='token'></div>
+        </div>
         <div class="field"></div>
 
         <div class="field"></div>
         <div class="field"></div>
         <div class="field">
-          <div class='token'></div>
+          <div class='token black'></div>
           <div class='token black selected'></div>
         </div>
         <div class="field"></div>
