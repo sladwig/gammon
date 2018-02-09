@@ -1,5 +1,4 @@
 import {Game} from 'boardgame.io/core';
-import Dice from './Dice';
 import moving from './moving';
 import boarding from './board';
 import boardPosition from './boardPosition';
@@ -17,6 +16,27 @@ function fromOut(id) {
   return id
 }
 
+function nextPlayer(currentPlayer, numPlayers) {
+  return (+parseInt(currentPlayer, 10) + 1) % numPlayers + ''
+}
+function isFirstTurn(ctx) { return ctx.turn === 0 }
+function playerRolledDice(openDice, player) {
+  return openDice.map((dice) => ( dice[0])).includes(player) 
+}
+function isSameDice(openDice) {
+  if (openDice.length < 2) return false
+  return openDice[0][1] === openDice[1][1]
+}
+function hasTwoDice(openDice) {
+  return openDice.length === 2
+}
+function hasRolledDice(openDice) {
+  return openDice.length > 1
+}
+function hasNoDice(openDice) {
+  return openDice.length === 0
+}
+
 const Backgammon = Game({
   setup: () => ({
     openDice: [],
@@ -25,28 +45,36 @@ const Backgammon = Game({
   }),
 
   moves: {
-    rollDice(G, ctx, numberOfDice) {
+    rollDice(G, ctx, player, rollableDice) {
       let openDice = [...G.openDice]; // don't mutate original
-      openDice = [Dice.roll(),Dice.roll()]
 
-      // 4 moves if the eyes are equal
-      if (openDice[0] === openDice[1]) {
-        openDice.push(openDice[0], openDice[0])
+      // first turn both are playing for first move
+      if (isFirstTurn(ctx)) {
+        if (!playerRolledDice(openDice, player)) {
+          openDice.push([player, rollableDice.roll()])
+        }
+
+      // otherwise roll two dice
+      } else {
+        openDice = [rollableDice.roll(),rollableDice.roll()]
+
+        // 4 moves if the eyes are equal
+        if (openDice[0] === openDice[1]) {
+          openDice.push(openDice[0], openDice[0])
+        }
       }
-
       return {...G, openDice}; // don't mutate original state.
     },
     moveStone(G, ctx, at, dice) {
-      console.log('moveStone', G, ctx, at, dice)
-      if (!at && at !== 0) { return G } else { console.log('stoping move no at')}
-      if (!dice) { return G } else { console.log('stoping move no dice')}
+      if (!at && at !== 0) { return {...G} }
+      if (!dice) { return {...G} }
 
       // don't mutate original state.
       let board = [...G.board];
       let openDice = [...G.openDice];
 
       // only continue if move is legal
-      if (!boarding.mayMoveTo(board, ctx.currentPlayer, at, dice)) {return G}
+      if (!boarding.mayMoveTo(board, ctx.currentPlayer, at, dice)) {return {...G}}
 
       let to = moving.to(ctx.currentPlayer, at, dice)
       
@@ -65,7 +93,7 @@ const Backgammon = Game({
       }
 
       // remove actual dice from open Dice
-      let firstIndex = openDice.findIndex((result) => { return result === dice}) 
+      let firstIndex = openDice.findIndex((result) => (result === dice)) 
       openDice.splice(firstIndex, 1)
 
       return {...G, board, openDice};      // don't mutate original state.
@@ -78,28 +106,64 @@ const Backgammon = Game({
       }
     },
     endTurnIf: (G, ctx) => {
-      return G.openDice.length === 0 || 
-            !boarding.hasPossibleMoves(G.board, ctx.currentPlayer, G.openDice)
-    },
-    onTurnEnd: (G, ctx) => {
-      if (G.openDice.length === 0) return G
-
-      let openDice = [...G.openDice]; // don't mutate original
-
-      openDice = []
-
-      return {...G, openDice}; // don't mutate original state.
+      return (hasNoDice(G.openDice) && 
+        !isFirstTurn(ctx) && !boarding.hasPossibleMoves(G.board, ctx.currentPlayer, G.openDice)) || 
+      (isFirstTurn(ctx) && ctx.phase === "movingStones" &&hasNoDice(G.openDice) )
     },
     phases: [
       {
-        name: 'rolling dice',
+        name: 'rollingDice',
         allowedMoves: ['rollDice'],
-        endPhaseIf: G => ( G.openDice.length > 0 ),
+        endPhaseIf: (G, ctx) => {
+          return (hasTwoDice(G.openDice) &&isFirstTurn(ctx) && !isSameDice(G.openDice)) || (hasRolledDice(G.openDice) && !isFirstTurn(ctx))
+        },
+        onMove: (G, ctx) => {
+          let openDice = [...G.openDice]; // don't mutate original
+          if (isFirstTurn(ctx) && hasRolledDice(openDice)) {
+            if (isSameDice(openDice)) {
+              openDice = []
+            }
+          }
+          return {...G, openDice}
+        },
+        onPhaseEnd: (G, ctx) => {
+          // just let it run the first round
+          if (ctx.turn > 0) return {...G};
+
+          let openDice = [...G.openDice]; // don't mutate original
+
+          // determine winner
+          let winnerFirstRound = openDice[0][1] < openDice[1][1] ? openDice[1][0] : openDice[0][0]
+          openDice = openDice.map((dice) => dice[1])
+          
+          return {...G, openDice, winnerFirstRound}
+        },
+        turnOrder: {
+          first: (G, ctx) => {
+            if (isFirstTurn(ctx) ) return 'any'
+            return nextPlayer(ctx.currentPlayer, ctx.numPlayers);
+          },
+          next: (G, ctx) => {
+            if (isFirstTurn(ctx) && hasTwoDice(G.openDice)) {
+              return nextPlayer(G.winnerFirstRound, ctx.numPlayers) 
+            }
+            return ctx.currentPlayer
+          },
+        },
       },
       {
-        name: 'move stones', 
+        name: 'movingStones', 
         allowedMoves: ['moveStone'],
-        endPhaseIf: (G, ctx) => ( G.openDice.length === 0 )
+        endPhaseIf: (G, ctx) => (hasNoDice(G.openDice)),
+        turnOrder: {
+          first: (G, ctx) => {
+            if (isFirstTurn(ctx)) return G.winnerFirstRound
+            return ctx.currentPlayer;
+          },
+          next: (G, ctx) => {
+            return nextPlayer(ctx.currentPlayer, ctx.numPlayers);
+          },
+        }
       }
     ]
   }
