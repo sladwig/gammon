@@ -1,18 +1,17 @@
 import React from 'react';
+import './DiceArea.css';
 
 class DiceArea extends React.Component {
-  // onClick(id) {
-  //   if (this.isActive(id)) {
-  //     this.props.moves.moveStone(id);
-  //     this.props.game.endTurn();
-  //   }
-  // }
+  handleClick = () => {
+    if (this.props.currentPlayer === "any" || this.props.currentPlayer === this.props.player) {
+      this.props.onClick(this.props.player)
+    }
+  }
 
-  // isActive(id) {
-  //   if (this.props.ctx.winner !== null) return false;
-  //   // if (this.props.G.cells[id] !== null) return false;
-  //   return true;
-  // }
+  playerColor() {
+    if (this.props.player ==="0") return "black"
+    if (this.props.player ==="1") return "white"
+  }
 
   render() {
     // const diceStyle = {
@@ -24,14 +23,25 @@ class DiceArea extends React.Component {
     //   float: 'left',
     // };
 
-    let dices = this.props.openDice //.G.openDice.toString();
+    let dices = this.props.openDice 
+
     if (dices.length === 0) {
       dices = 'roll Dice'
+    } else {
+      if (Array.isArray(dices[0])) {
+        dices = dices.filter((dice) => (dice[0] === this.props.player))
+        if (dices.length === 0) {
+          dices = 'roll Dice'
+        } else {
+          dices = dices.map((dice) => dice[1])
+        }
+      }
     }
+
     
     return (
-      <div id="j" onClick={this.props.onClick}>
-        {dices}
+      <div className={"dice-"+this.playerColor()} onClick={this.handleClick}>
+        {this.playerColor()}: {dices}
       </div>
     );
   }

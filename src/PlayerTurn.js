@@ -11,7 +11,9 @@ class PlayerTurn extends React.Component {
     //   float: 'left',
     // };
 
-    let player = this.props.currentPlayer === "0" ? "black" : "white"   //.G.openDice.toString();
+    let player = "any"
+    if (this.props.currentPlayer === "0") player = "black";
+    if (this.props.currentPlayer === "1") player = "white";
     return (
       <div id="player-turn">
         Player: {player}<br/>

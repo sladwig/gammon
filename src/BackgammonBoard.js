@@ -2,18 +2,14 @@ import React from 'react';
 import DiceArea from './DiceArea';
 import PlayerTurn from './PlayerTurn';
 import Fields from './Fields';
+import Dice from './Dice';
 
 class BackgammonBoard extends React.Component {
   // I think we should implement an isActive here?
-  // isActive(id) {
-  //   if (this.props.ctx.gameover !== null) return false;
-  //   // if (this.props.G.cells[id] !== null) return false;
-  //   return true;
-  // }
 
-  rollTheDice = () => {
-    if (this.props.G.openDice.length === 0) {
-      this.props.moves.rollDice()
+  rollTheDice = (player) => {
+    if (this.props.G.openDice.length < 2) {
+      this.props.moves.rollDice(player, Dice)
     }
   }
   makeMove = (from, dice) => {
@@ -22,7 +18,6 @@ class BackgammonBoard extends React.Component {
 
 
   render() {
-
     let winner = '';
     if (this.props.ctx.gameover !== null) {
       winner = <div>Winner: {this.props.ctx.gameover}</div>;
@@ -36,7 +31,14 @@ class BackgammonBoard extends React.Component {
                 makeMove={this.makeMove}/>
         <br/>
         {winner}
-        <DiceArea openDice={this.props.G.openDice} onClick={this.rollTheDice}/>
+        <DiceArea openDice={this.props.G.openDice} 
+            onClick={this.rollTheDice} 
+            currentPlayer={this.props.ctx.currentPlayer} 
+            player="0" />
+        <DiceArea openDice={this.props.G.openDice} 
+            onClick={this.rollTheDice} 
+            currentPlayer={this.props.ctx.currentPlayer} 
+            player="1" />
         <PlayerTurn currentPlayer={this.props.ctx.currentPlayer} 
           phase={this.props.ctx.phase} />
       </div>
