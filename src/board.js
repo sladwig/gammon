@@ -37,6 +37,8 @@ function movesBar(from) {
 
 const board = {
   mayMoveTo(board, currentPlayer, at, dice) {
+    if (Array.isArray(dice)) return false
+
     let to = moving.to(currentPlayer, at, dice)
 
     // may only move my color
@@ -84,14 +86,17 @@ const board = {
     return false;
   },
   isBiggestStone(board, currentPlayer, at) {
-    let index = -1;
+    return at === this.biggestStone(board, currentPlayer) 
+  },
+  biggestStone(board, currentPlayer) {
+    let result = undefined;
     if (player.isWhite(currentPlayer)) {
-      index = board.map(hasWhite).indexOf(true)
+      result = board.map(hasWhite).indexOf(true)
     }
     if (player.isBlack(currentPlayer)) {
-      index = board.map(hasBlack).lastIndexOf(true)
+      result = board.map(hasBlack).lastIndexOf(true)
     }
-    return at === index 
+    return result
   },
   isOccupied(board, currentPlayer, at) {
     return !this.isMyColor(board, currentPlayer, at) && board[at].length > 1

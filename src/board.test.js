@@ -195,3 +195,13 @@ it('correctly checks if a player has possible moves', () => {
   expect(board.hasPossibleMoves(playerBlack('isBarAndRestHome'), black, [1, 4])).toBe(true)
 });
 
+it('correctly checks if black may move to', () => {
+  expect(board.mayMoveTo(boardPosition.start, black, 24, 5)).toBe(false)
+  expect(board.mayMoveTo(boardPosition.start, black, 24, 2)).toBe(true)
+});
+
+it('correctly checks if black may move to with an array', () => {
+  expect(board.mayMoveTo(boardPosition.start, black, 24, [])).toBe(false)
+  expect(board.mayMoveTo(boardPosition.start, black, 24, ["0", 2])).toBe(false)
+});
+
