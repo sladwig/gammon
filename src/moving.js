@@ -26,7 +26,7 @@ const moving = {
   },
 
   from(currentPlayer, at, dice) {
-    return (this.counterDirection(currentPlayer)) * dice + at;
+    return this.sanitizeTo((this.counterDirection(currentPlayer)) * dice + at);
   },
 
   sanitizeTo(to) {

@@ -17,8 +17,11 @@ it('has correct counter move Directions', () => {
 
 
 it('calculates moving to', () => {
+  expect(moving.to(player.white, 22, 6)).toBe(25)
   expect(moving.to(player.white, 6, 4)).toBe(10)
   expect(moving.to(player.black, 6, 4)).toBe(2)
+  expect(moving.to(player.black, 4, 6)).toBe(0)
+
 });
 
 it('correctly sanitizeTo', () => {
@@ -35,8 +38,10 @@ it('correctly sanitizeTo', () => {
 })
 
 it('calculates moving from', () => {
+  expect(moving.from(player.white, 2, 6)).toBe(0)
   expect(moving.from(player.white, 6, 4)).toBe(2)
   expect(moving.from(player.black, 6, 4)).toBe(10)
+  expect(moving.from(player.black, 23, 6)).toBe(25)
 });
 
 it('correctly moves out', () => {
