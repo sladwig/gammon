@@ -40,8 +40,8 @@ function hasNoDice(openDice) {
 const Backgammon = Game({
   setup: () => ({
     openDice: [],
-    board: boardPosition.start
-    // board: generateBoard(boardScenarios.isAlmostDone, "0") // testing see above
+    board: boardPosition.start,
+    // board: generateBoard(boardScenarios.isAlmostDone, "0"), // testing see above
   }),
 
   moves: {

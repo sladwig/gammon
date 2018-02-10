@@ -1,6 +1,8 @@
+import React from 'react';
 import Field from './Field';
 import {player} from './moving'
 import board from './board'
+import Token from './Token'
 
 class Bar extends Field {
   onClick(id) {
@@ -19,13 +21,23 @@ class Bar extends Field {
     return false  
   }
 
-  // render() {
-  //   return (
-  //     <div id="bar">
-  //       The Bar: {this.props.bar}
-  //     </div>
-  //   );
-  // }
+  render() {
+    let selected = this.props.selected === this.myID() 
+
+    let tokens = this.props.board[this.props.id]
+    tokens = tokens.map((token, index) => {
+      let isSelected = selected && ''+token === this.props.ctx.currentPlayer;
+      return <Token key={index} player={token} selected={isSelected} /> 
+    })
+
+    return (
+      <div id={"field-"+this.props.id}
+          className="bar"
+          onClick={() => this.onClick(this.props.id)}>
+        {tokens}
+      </div>
+    );
+  }
 }
 
 export default Bar;

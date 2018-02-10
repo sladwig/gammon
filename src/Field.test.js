@@ -4,18 +4,20 @@ import renderer from 'react-test-renderer';
 // import App from './App';
 import Field from './Field'
 import boardPosition from './boardPosition'
+import generateBoard from './generateBoard'
+import {boardScenarios} from './generateBoard'
 
 const blackPlayer = {currentPlayer: "0"}
 const whitePlayer = {currentPlayer: "1"}
 
 it('has Stones', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={1} 
+    <Field id={1} 
           ctx={{}} 
           openDice={[]} 
           board={boardPosition.start}
           selected={false}
+          destinations={[]}
           selecting={()=>{}}
           makeMove={()=>{}} />
   );
@@ -25,12 +27,12 @@ it('has Stones', () => {
 
 it('has no Stones', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={1} 
+    <Field id={1} 
           ctx={{}} 
           openDice={[]} 
           board={boardPosition.empty}
           selected={false}
+          destinations={[]}
           selecting={()=>{}}
           makeMove={()=>{}} />
   );
@@ -41,12 +43,12 @@ it('has no Stones', () => {
 
 it('white has Stones', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={1} 
+    <Field id={1} 
           ctx={whitePlayer} 
           openDice={[]} 
           board={boardPosition.start}
           selected={false}
+          destinations={[]}
           selecting={()=>{}}
           makeMove={()=>{}} />
   );
@@ -55,12 +57,12 @@ it('white has Stones', () => {
 
 it('white has no black Stones', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={1} 
+    <Field id={1} 
           ctx={whitePlayer} 
           openDice={[]} 
           board={boardPosition.empty}
           selected={false}
+          destinations={[]}
           selecting={()=>{}}
           makeMove={()=>{}} />
   );
@@ -69,12 +71,12 @@ it('white has no black Stones', () => {
 
 it('white has no empty Stones', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={1} 
+    <Field id={1} 
           ctx={whitePlayer} 
           openDice={[]} 
           board={boardPosition.empty}
           selected={false}
+          destinations={[]}
           selecting={()=>{}}
           makeMove={()=>{}} />
   );
@@ -85,12 +87,12 @@ it('white has no empty Stones', () => {
 
 it('black has Stones', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={6} 
+    <Field id={6} 
           ctx={blackPlayer} 
           openDice={[]} 
           board={boardPosition.start}
           selected={false}
+          destinations={[]}
           selecting={()=>{}}
           makeMove={()=>{}} />
   );
@@ -99,12 +101,12 @@ it('black has Stones', () => {
 
 it('black has no white Stones', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={1} 
+    <Field id={1} 
           ctx={blackPlayer} 
           openDice={[]} 
           board={boardPosition.empty}
           selected={false}
+          destinations={[]}
           selecting={()=>{}}
           makeMove={()=>{}} />
   );
@@ -113,12 +115,12 @@ it('black has no white Stones', () => {
 
 it('black has no empty Stones', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={1} 
+    <Field id={1} 
           ctx={blackPlayer} 
           openDice={[]} 
           board={boardPosition.empty}
           selected={false}
+          destinations={[]}
           selecting={()=>{}}
           makeMove={()=>{}} />
   );
@@ -127,69 +129,87 @@ it('black has no empty Stones', () => {
 
 
 
-// isPossibleDestinationOf
-it('isPossibleDestinationOf for black', () => {
-  const component = renderer.create(
-    <Field key={1} 
-          id={6} 
-          ctx={blackPlayer} 
-          openDice={[2,4]} 
-          board={boardPosition.empty}
-          selected={6}
-          selecting={()=>{}}
-          makeMove={()=>{}} />
-  );
-  expect(component.getInstance().isPossibleDestinationOf()).toEqual([8,10])
-});
-it('isPossibleDestinationOf for white', () => {
-  const component = renderer.create(
-    <Field key={1} 
-          id={6} 
-          ctx={whitePlayer} 
-          openDice={[2,4]} 
-          board={boardPosition.empty}
-          selected={6}
-          selecting={()=>{}}
-          makeMove={()=>{}} />
-  );
-  expect(component.getInstance().isPossibleDestinationOf()).toEqual([4,2])
-});
 
- start: [[],
-    [1,1],[],[],[],[],[0,0,0,0,0],
-    [],[0,0,0],[],[],[],[1,1,1,1,1],
-    [0,0,0,0,0],[],[],[],[1,1,1],[],
-    [1,1,1,1,1],[],[],[],[],[0,0],
-    [],
-    []],
+ // start: [[],
+ //    [1,1],[],[],[],[],[0,0,0,0,0],
+ //    [],[0,0,0],[],[],[],[1,1,1,1,1],
+ //    [0,0,0,0,0],[],[],[],[1,1,1],[],
+ //    [1,1,1,1,1],[],[],[],[],[0,0],
+ //    [],
+ //    []],
 
 it('isPossibleDestination for black and respects possible moves', () => {
+  // we are using the start position here so 6 cant move
+  // with 5 to one because it is occupied
   const component = renderer.create(
-    <Field key={1} 
-          id={1} 
+    <Field id={1} 
           ctx={blackPlayer} 
           openDice={[2,5]} 
           board={boardPosition.start}
           selected={6}
           selecting={()=>{}}
+          destinations={[4]}
           makeMove={()=>{}} />
   );
-  expect(component.getInstance().isPossibleDestinationOf()).toEqual([3,6])
   expect(component.getInstance().isPossibleDestination()).toEqual(false)
 
 });
+// basically the logic is not in field anymore!?
+it('out isPossibleDestination for black, if player is home', () => {
+  const component = renderer.create(
+    <Field id={0} 
+          ctx={blackPlayer} 
+          openDice={[2,5]} 
+          board={generateBoard(boardScenarios.isAlmostDone)}
+          selected={5}
+          selecting={()=>{}}
+          destinations={[0]}
+          makeMove={()=>{}} />
+  );
+  expect(component.getInstance().isPossibleDestination()).toEqual(true)
+});
+it('out isPossibleDestination for black, if player is home and almost done and dice bigger than stone ', () => {
+  const component = renderer.create(
+    <Field id={0} 
+          ctx={blackPlayer} 
+          openDice={[2,5]} 
+          board={generateBoard(boardScenarios.isAlmostDone, "0")}
+          selected={3}
+          selecting={()=>{}}
+          destinations={[0,2]}
+          makeMove={()=>{}} />
+  );
+  expect(component.getInstance().isPossibleDestination()).toEqual(true)
+
+});
+it('out NOT isPossibleDestination for black, if player is home and almost done and dice smaller than stone ', () => {
+  const component = renderer.create(
+    <Field id={0} 
+          ctx={blackPlayer} 
+          openDice={[2,1]} 
+          board={generateBoard(boardScenarios.isAlmostDone, "0")}
+          selected={3}
+          selecting={()=>{}}
+          destinations={[1,2]}
+          makeMove={()=>{}} />
+  );
+  expect(component.getInstance().isPossibleDestination()).toEqual(false)
+
+});
+
+
+
 it('isPossibleDestination for white and respects possible moves', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={24} 
+    <Field id={24} 
           ctx={whitePlayer} 
           openDice={[2,5]} 
           board={boardPosition.start}
           selected={19}
           selecting={()=>{}}
+          destinations={[]}
           makeMove={()=>{}} />
   );
-  expect(component.getInstance().isPossibleDestinationOf()).toEqual([22,19])
   expect(component.getInstance().isPossibleDestination()).toEqual(false)
 });
 
@@ -197,13 +217,13 @@ it('isPossibleDestination for white and respects possible moves', () => {
 // is possible destination
 it('isPossibleDestination for black', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={2} 
+    <Field id={2} 
           ctx={blackPlayer} 
           openDice={[2,4]} 
           board={boardPosition.empty}
           selected={6}
           selecting={()=>{}}
+          destinations={[4,2]}
           makeMove={()=>{}} />
   );
   expect(component.getInstance().isPossibleDestination()).toEqual(true)
@@ -211,13 +231,13 @@ it('isPossibleDestination for black', () => {
 
 it('not isPossibleDestination for black', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={3} 
+    <Field id={3} 
           ctx={blackPlayer} 
           openDice={[2,4]} 
           board={boardPosition.empty}
           selected={6}
           selecting={()=>{}}
+          destinations={[]}
           makeMove={()=>{}} />
   );
   expect(component.getInstance().isPossibleDestination()).toEqual(false)
@@ -225,13 +245,13 @@ it('not isPossibleDestination for black', () => {
 
 it('isPossibleDestination for white', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={8} 
+    <Field id={8} 
           ctx={whitePlayer} 
           openDice={[2,4]} 
           board={boardPosition.empty}
           selected={6}
           selecting={()=>{}}
+          destinations={[8,10]}
           makeMove={()=>{}} />
   );
   expect(component.getInstance().isPossibleDestination()).toEqual(true)
@@ -239,13 +259,13 @@ it('isPossibleDestination for white', () => {
 
 it('not isPossibleDestination for white', () => {
   const component = renderer.create(
-    <Field key={1} 
-          id={11} 
+    <Field id={11} 
           ctx={whitePlayer} 
           openDice={[2,4]} 
           board={boardPosition.empty}
           selected={6}
           selecting={()=>{}}
+          destinations={[]}
           makeMove={()=>{}} />
   );
   expect(component.getInstance().isPossibleDestination()).toEqual(false)

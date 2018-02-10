@@ -1,0 +1,38 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  grid-column: span 1;
+  grid-row: span 5;
+}
+.field:nth-of-type(n+18) {
+  flex-direction: column-reverse;
+}
+
+.field:before {
+  position:fixed;
+  align-self: center;
+  justify-self: center;
+  content: '';
+  width: 0; 
+  height: 0; 
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-top: 275px solid rgb(44,44,44);
+}
+.field:nth-of-type(n+18):before {
+  bottom: 0;
+  border-top: 0;
+  border-bottom: 275px solid rgb(240,240,240);
+}
+
+.field:nth-of-type(even):before, .field:nth-of-type(n+18):nth-of-type(odd):before {
+  border-top-color: rgb(240,240,240);
+  border-bottom-color: rgb(240,240,240);
+}
+.field:nth-of-type(n+18):nth-of-type(even):before {
+  border-top-color: rgb(44,44,44);
+  border-bottom-color: rgb(44,44,44);
+}
+
+

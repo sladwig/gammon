@@ -1,13 +1,14 @@
 import React from 'react';
 import moving from './moving';
 import board from './board';
-
+// import playerColor from './playerColor'
+import Token from './Token'
+import './Field.css'
 
 function fromOut(id) {
   if (id === 25 || id === 0) return 26
   return id
 }
-
 
 class Field extends React.Component {
   onClick(id) {
@@ -68,36 +69,31 @@ class Field extends React.Component {
 
   // if this is a selectable field  
   isPossibleDestination() {
-    return !board.isOccupied(this.props.board, this.props.ctx.currentPlayer, this.props.id) 
-      && this.isPossibleDestinationOf().includes(this.props.selected)
+    return this.props.destinations.includes(this.props.id)
   }
-  isPossibleDestinationOf() {
-    return this.props.openDice.map((dice) => {
-      return moving.from(this.props.ctx.currentPlayer, this.props.id, dice)
-    })
-  }
-
 
 
   render() {
-    const cellStyle = {
-      border: '1px solid #555',
-      width: '50px',
-      height: '50px',
-      lineHeight: '50px',
-      textAlign: 'center',
-      float: 'left',
-    };
+    let selected = this.props.selected === this.props.id 
+    let possible = this.isPossibleDestination() 
 
-    let selected = this.props.selected === this.props.id ? "*" : ""
-    let possible = this.isPossibleDestination() ? '?' : ""
+    let tokens = this.props.board[this.props.id]
+    tokens = tokens.map((token, index) => {
+      if (selected && index === tokens.length-1) {
+        return <Token key={index} player={token} selected={true} /> 
+      }
+      return <Token key={index} player={token} />
+    })
 
+    if (possible) {
+      tokens.push(<Token key={tokens.length+1} 
+          player={this.props.ctx.currentPlayer} destination={true} />) 
+    }
     return (
-      <div style={cellStyle} 
-          id="field-{this.props.id}"
-          key={this.props.id}
+      <div id={"field-"+this.props.id}
+          className="field"
           onClick={() => this.onClick(this.props.id)}>
-        {this.props.board[this.props.id]}{selected}{possible}
+        {tokens}
       </div>
     );
   }
