@@ -28,31 +28,28 @@ const has = function(player) {return (field) => {return field.includes(player)} 
 const hasWhite = has(1)
 const hasBlack = has(0)
 
-function wantsOut(to) {
-  return to === 0 || to === 25
-}
-function movesBar(from) {
-  return from === 25 || from === 0
+function outOrBar(at) {
+  return at === 0 || at === 25
 }
 
 const board = {
   mayMoveTo(board, currentPlayer, at, dice) {
     if (Array.isArray(dice)) return false
 
-    let to = moving.to(currentPlayer, at, dice)
-
     // may only move my color
     if (!this.isMyColor(board, currentPlayer, at)) return false;
 
+    let to = moving.to(currentPlayer, at, dice)
+
     // here the case of moving stones out only when home
-    if (wantsOut(to)) {
+    if (outOrBar(to)) {
       if (!this.isHome(board, currentPlayer)) return false;
       // also only the biggest stone may be used when dice is bigger
       if (moving.distance(at,to) < dice && !this.isBiggestStone(board, currentPlayer, at)) return false
     }
     
     // the case where player is Bar and wants back in the game
-    if (this.isBar(board, currentPlayer) && !movesBar(at)) return false;
+    if (this.isBar(board, currentPlayer) && !outOrBar(at)) return false;
     
     // normal case, where you are not allowed to move on occupied fields
     if (this.isOccupied(board, currentPlayer, to)) return false;
