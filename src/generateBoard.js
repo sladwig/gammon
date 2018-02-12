@@ -73,6 +73,22 @@ const boardScenarios = {
     [],[],[],[],[],[],
     []]
     , []],
+  cantMoveFromBar: [
+    [[1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1],[],[],[],[],[],
+    [],[],[],[],[],[],
+    [],[],[],[],[],[],
+    [0,0,0,0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
+    []]
+    , [1]],
+  isBarSurrounded: [
+    [[1,1],
+    [1,1],[1,1],[1,1,1],[1,1,1],[0,0],[1,1],
+    [],[0,0,0],[],[],[],[],
+    [0,0,0,0,0],[],[],[],[],[],
+    [],[],[],[],[],[0,0,0,0,0],
+    []]
+    , [0,1,0]],
 
 }
 
@@ -89,6 +105,11 @@ const stone = {
     return false
   }
 
+}
+
+function getTokenForPlayer(currentPlayer, token) {
+  if (token === 1) return stone.me(currentPlayer)
+  if (token === 0) return stone.other(currentPlayer)
 }
 
 // generateBoard generates Boards by using a template,
@@ -108,12 +129,7 @@ function generateBoard(template, currentPlayer) {
       let field = useBoard[i]
       let fieldResult = []
       for (let token of field) {
-        if (token === 1) {
-          fieldResult.push(stone.me(currentPlayer))
-        } 
-        if (token === 0) {
-          fieldResult.push(stone.other(currentPlayer))
-        }
+        fieldResult.push(getTokenForPlayer(currentPlayer, token))
       }
       result.push(fieldResult)
     }
@@ -123,24 +139,14 @@ function generateBoard(template, currentPlayer) {
       let field = useBoard[i]
       let fieldResult = []
       for (let token of field) {
-        if (token === 1) {
-          fieldResult.push(stone.me(currentPlayer))
-        } 
-        if (token === 0) {
-          fieldResult.push(stone.other(currentPlayer))
-        }
+        fieldResult.push(getTokenForPlayer(currentPlayer, token))
       }
       result.push(fieldResult)
     }
   }
   let last = []
   for (let token of template[1]) {
-    if (token === 1) {
-      last.push(stone.me(currentPlayer))
-    } 
-    if (token === 0) {
-      last.push(stone.other(currentPlayer))
-    }
+    last.push(getTokenForPlayer(currentPlayer, token))
   }
   result.push(last);
   return result;
