@@ -1,7 +1,6 @@
 import React from 'react';
 import moving from './moving';
 import board from './board';
-// import playerColor from './playerColor'
 import Token from './Token'
 import './Field.css'
 
@@ -12,13 +11,14 @@ function fromOut(id) {
 
 class Field extends React.Component {
   onClick(id) {
+    let selected = this.props.selected
     // nothing selected -> select
-    if (!this.props.selected && this.props.selected !== 0) {
+    if (!selected && selected !== 0) {
       this.trySelecting(id)
       return 
     } 
     // deselect if same value
-    if (this.props.selected===id) {
+    if (selected===id) {
       this.props.selecting(null)
       return
     }
@@ -26,16 +26,18 @@ class Field extends React.Component {
     // we have a selected
     // check if possible destination -> make move
     if (this.isPossibleDestination()) {
-      let diceValue = moving.distance(this.props.selected, id);
-      this.props.makeMove(this.props.selected, diceValue)
+      let diceValue = moving.distance(selected, id);
+      this.props.makeMove(selected, diceValue)
       this.props.selecting(null)
       return
     } 
     // home out situation
-    if (board.isHome(this.props.board, this.props.ctx.currentPlayer) 
-      && board.isBiggestStone(this.props.board, this.props.ctx.currentPlayer, this.props.selected)) {
+    let givenBoard = this.props.board
+    let currentPlayer = this.props.ctx.currentPlayer
+    if (board.isHome(givenBoard, currentPlayer) 
+      && board.isBiggestStone(givenBoard, currentPlayer, selected)) {
       let diceValue = this.props.openDice.reduce((a,b) => {return Math.max(a,b)})
-      this.props.makeMove(this.props.selected, diceValue)
+      this.props.makeMove(selected, diceValue)
       this.props.selecting(null)
       return
     }

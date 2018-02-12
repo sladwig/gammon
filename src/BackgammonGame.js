@@ -16,8 +16,8 @@ function fromOut(id) {
   return id
 }
 
-function nextPlayer(currentPlayer, numPlayers) {
-  return (+parseInt(currentPlayer, 10) + 1) % numPlayers + ''
+function nextPlayer(currentPlayer) {
+  return (+parseInt(currentPlayer, 10) + 1) % 2 + ''
 }
 function isFirstTurn(ctx) { return ctx.turn === 0 }
 function playerRolledDice(openDice, player) {
@@ -45,18 +45,19 @@ const Backgammon = Game({
   }),
 
   moves: {
-    rollDice(G, ctx, player, rollableDice) {
+    rollDice(G, ctx, player, rollableDice1, rollableDice2) {
+      if (rollableDice2 === undefined) rollableDice2 = rollableDice1
       let openDice = [...G.openDice]; // don't mutate original
 
       // first turn both are playing for first move
       if (isFirstTurn(ctx)) {
         if (!playerRolledDice(openDice, player)) {
-          openDice.push([player, rollableDice.roll()])
+          openDice.push([player, rollableDice1.roll()])
         }
 
       // otherwise roll two dice
       } else {
-        openDice = [rollableDice.roll(),rollableDice.roll()]
+        openDice = [rollableDice1.roll(),rollableDice2.roll()]
 
         // 4 moves if the eyes are equal
         if (openDice[0] === openDice[1]) {
@@ -84,8 +85,14 @@ const Backgammon = Game({
         boarding.exactlyOne(board, to)) {
         throwOut = board[to].pop();
       }
+
       // move stone
-      board[to].push(board[fromOut(at)].pop());
+      // we want the correct one from the bar
+      if (fromOut(at) === 26) {
+        board[to].push(...board[26].splice(board[26].indexOf(parseInt(ctx.currentPlayer, 10)), 1))
+      } else {
+        board[to].push(board[fromOut(at)].pop());
+      }
 
       // execute throw out
       if (throwOut !== null) {
@@ -105,63 +112,67 @@ const Backgammon = Game({
         return ctx.currentPlayer;
       }
     },
-    endTurnIf: (G, ctx) => {
-      return (hasNoDice(G.openDice) && 
-        !isFirstTurn(ctx) && !boarding.hasPossibleMoves(G.board, ctx.currentPlayer, G.openDice)) || 
-      (isFirstTurn(ctx) && ctx.phase === "movingStones" &&hasNoDice(G.openDice) )
-    },
+    onTurnEnd: (G, ctx) => ( {...G, openDice: []} ),
     phases: [
       {
         name: 'rollingDice',
         allowedMoves: ['rollDice'],
         endPhaseIf: (G, ctx) => {
-          return (hasTwoDice(G.openDice) &&isFirstTurn(ctx) && !isSameDice(G.openDice)) || (hasRolledDice(G.openDice) && !isFirstTurn(ctx))
+          return hasRolledDice(G.openDice) && !!G.winnerFirstRound
+        },
+        endTurnIf: (G, ctx) => {
+          if (!G.winnerFirstRound) return false
+
+          let player = ctx.currentPlayer === "any" ? G.winnerFirstRound: ctx.currentPlayer
+
+          return !boarding.hasPossibleMoves(G.board, player, G.openDice) 
         },
         onMove: (G, ctx) => {
-          let openDice = [...G.openDice]; // don't mutate original
-          if (isFirstTurn(ctx) && hasRolledDice(openDice)) {
-            if (isSameDice(openDice)) {
-              openDice = []
-            }
-          }
-          return {...G, openDice}
-        },
-        onPhaseEnd: (G, ctx) => {
-          // just let it run the first round
-          if (ctx.turn > 0) return {...G};
+          // only in first turn
+          if (!isFirstTurn(ctx)) return {...G};
 
           let openDice = [...G.openDice]; // don't mutate original
-
+          // wait for other player
+          if (!hasRolledDice(openDice)) return {...G};
+          // roll again if same dice
+          if (isSameDice(openDice)) return {...G, openDice: []}
+                    
           // determine winner
           let winnerFirstRound = openDice[0][1] < openDice[1][1] ? openDice[1][0] : openDice[0][0]
           openDice = openDice.map((dice) => dice[1])
-          
+
           return {...G, openDice, winnerFirstRound}
         },
         turnOrder: {
           first: (G, ctx) => {
             if (isFirstTurn(ctx) ) return 'any'
-            return nextPlayer(ctx.currentPlayer, ctx.numPlayers);
+            return nextPlayer(ctx.currentPlayer);
           },
           next: (G, ctx) => {
-            if (isFirstTurn(ctx) && hasTwoDice(G.openDice)) {
-              return nextPlayer(G.winnerFirstRound, ctx.numPlayers) 
+            if ((isFirstTurn(ctx) && hasTwoDice(G.openDice)) || (isFirstTurn(ctx) && ctx.currentPlayer === "any")) {
+              return nextPlayer(G.winnerFirstRound) 
             }
-            return ctx.currentPlayer
+            return nextPlayer(ctx.currentPlayer)
           },
         },
       },
       {
         name: 'movingStones', 
         allowedMoves: ['moveStone'],
-        endPhaseIf: (G, ctx) => (hasNoDice(G.openDice)),
+        endPhaseIf: (G, ctx) => {
+          return !boarding.hasPossibleMoves(G.board, ctx.currentPlayer, G.openDice)
+        },
+        endTurnIf: (G, ctx) => {
+          return !boarding.hasPossibleMoves(G.board, ctx.currentPlayer, G.openDice)
+        },
+        onPhaseEnd: (G, ctx) => ({...G, openDice: []}),
         turnOrder: {
           first: (G, ctx) => {
             if (isFirstTurn(ctx)) return G.winnerFirstRound
             return ctx.currentPlayer;
           },
           next: (G, ctx) => {
-            return nextPlayer(ctx.currentPlayer, ctx.numPlayers);
+            return nextPlayer(ctx.currentPlayer);
           },
         }
       }
