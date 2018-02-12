@@ -5,7 +5,6 @@ import playerColor from './playerColor'
 
 class Out extends Field {
   render() {
-    let selected = this.props.selected === this.props.id
     let possible = this.isPossibleDestination() 
 
 
@@ -17,9 +16,6 @@ class Out extends Field {
     if (this.props.id === 25) color = "white"
     if (this.props.id === 0) color = "black"
     tokens = tokens.map((token, index) => {
-      if (selected && index === tokens.length-1) {
-        return <Token key={index} player={token} selected={true} /> 
-      }
       return <Token key={index} player={token} />
     })
 

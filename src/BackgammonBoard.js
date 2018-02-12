@@ -86,7 +86,6 @@ class BackgammonBoard extends React.Component {
               ctx={this.props.ctx} 
               openDice={this.props.G.openDice} 
               board={this.props.G.board}
-              selected={this.state.selected}
               destinations={this.state.destinations}
               selecting={this.selecting}
               makeMove={this.makeMove} />
@@ -95,7 +94,6 @@ class BackgammonBoard extends React.Component {
               ctx={this.props.ctx} 
               openDice={this.props.G.openDice} 
               board={this.props.G.board}
-              selected={this.state.selected}
               destinations={this.state.destinations}
               selecting={this.selecting}
               makeMove={this.makeMove} />
