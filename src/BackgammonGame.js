@@ -33,9 +33,6 @@ function hasTwoDice(openDice) {
 function hasRolledDice(openDice) {
   return openDice.length > 1
 }
-function hasNoDice(openDice) {
-  return openDice.length === 0
-}
 
 const Backgammon = Game({
   setup: () => ({
