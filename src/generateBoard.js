@@ -113,8 +113,8 @@ function getTokenForPlayer(currentPlayer, token) {
 }
 
 // generateBoard generates Boards by using a template,
-// this way you can define a szenario on board and generate 
-// the szenario for both players
+// this way you can define a szenario on board and 
+// generate the szenario for both players
 // the templates are generally arrays of arrays, 
 // which will be reversed for white 
 // also the bar is an extra array which gets concated 

@@ -2,7 +2,7 @@
 // around moving stones around
 // it considers the current player, but doesn't validate
 // if a move is legal or not, for this you should use
-// the functions provided by ./board.js
+// the functions provided by ./boarding.js
 // it does however calculate all the positions correctly
 
 const player = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import Field from './Field';
 import {player} from './moving'
-import board from './board'
+import boarding from './boarding'
 import Token from './Token'
 
 class Bar extends Field {
@@ -16,7 +16,7 @@ class Bar extends Field {
 
   possibleMoves() { 
     return this.props.openDice.filter((dice) => {
-      return board.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, this.myID(), dice)
+      return boarding.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, this.myID(), dice)
     });
   } 
 

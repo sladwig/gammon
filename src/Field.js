@@ -1,6 +1,6 @@
 import React from 'react';
 import moving from './moving';
-import board from './board';
+import boarding from './boarding';
 import Token from './Token'
 import './Field.css'
 
@@ -32,10 +32,10 @@ class Field extends React.Component {
       return
     } 
     // home out situation
-    let givenBoard = this.props.board
+    let board = this.props.board
     let currentPlayer = this.props.ctx.currentPlayer
-    if (board.isHome(givenBoard, currentPlayer) 
-      && board.isBiggestStone(givenBoard, currentPlayer, selected)) {
+    if (boarding.isHome(board, currentPlayer) 
+      && boarding.isBiggestStone(board, currentPlayer, selected)) {
       let diceValue = this.props.openDice.reduce((a,b) => {return Math.max(a,b)})
       this.props.makeMove(selected, diceValue)
       this.props.selecting(null)
@@ -46,9 +46,9 @@ class Field extends React.Component {
     this.trySelecting(id)    
   }
   trySelecting(id) {
-    if (!this.hasStones()) { return } else { console.log('i have stones') }
-    if (!this.hasStonesOfCurrentPlayer()) { return } else { console.log('even of currentPlayer') }
-    if (!this.hasPossibleMoves()) { return; } else { console.log('i have possible moves')}
+    if (!this.hasStones()) { return this.props.selecting(null) } 
+    if (!this.hasStonesOfCurrentPlayer()) { return this.props.selecting(null) }
+    if (!this.hasPossibleMoves()) { return this.props.selecting(null) } 
 
     this.props.selecting(id)
   }
@@ -56,7 +56,7 @@ class Field extends React.Component {
     return this.props.board[this.props.id].length > 0;
   }
   hasStonesOfCurrentPlayer() {
-    return board.isMyColor(this.props.board, this.props.ctx.currentPlayer, fromOut(this.props.id))
+    return boarding.isMyColor(this.props.board, this.props.ctx.currentPlayer, fromOut(this.props.id))
   }
   hasPossibleMoves() {
     return this.possibleMoves().length > 0
@@ -64,7 +64,7 @@ class Field extends React.Component {
   // maybe better to name possibleDice
   possibleMoves() { 
     return this.props.openDice.filter((dice) => {
-      return board.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, fromOut(this.props.id), dice)
+      return boarding.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, fromOut(this.props.id), dice)
     });
   }  
 

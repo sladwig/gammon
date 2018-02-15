@@ -1,6 +1,6 @@
 import {Game} from 'boardgame.io/core';
 import moving from './moving';
-import boarding from './board';
+import boarding from './boarding';
 import boardPosition from './boardPosition';
 // for testing scenarios
 // import generateBoard from './generateBoard';

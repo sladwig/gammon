@@ -6,10 +6,9 @@ import Field from './Field';
 import Bar from './Bar';
 import Out from './Out';
 import moving from './moving'
-import board from './board'
+import boarding from './boarding'
 
 class BackgammonBoard extends React.Component {
-  // I think we should implement an isActive here?
   constructor(props) {
     super(props);
     this.state = { selected: null, destinations: [] };
@@ -30,7 +29,7 @@ class BackgammonBoard extends React.Component {
     }
     let destinations = this.props.G.openDice.filter(
       (dice) => 
-      board.mayMoveTo(this.props.G.board, this.props.ctx.currentPlayer, at, dice)
+      boarding.mayMoveTo(this.props.G.board, this.props.ctx.currentPlayer, at, dice)
     ).map((dice) => 
       moving.to(this.props.ctx.currentPlayer, at, dice)
     )
