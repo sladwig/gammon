@@ -33,7 +33,7 @@ class Field extends React.Component {
     } 
     // home out situation
     let board = this.props.board
-    let currentPlayer = this.props.ctx.currentPlayer
+    let currentPlayer = this.props.currentPlayer
     if (boarding.isHome(board, currentPlayer) 
       && boarding.isBiggestStone(board, currentPlayer, selected)) {
       let diceValue = this.props.openDice.reduce((a,b) => {return Math.max(a,b)})
@@ -56,7 +56,7 @@ class Field extends React.Component {
     return this.props.board[this.props.id].length > 0;
   }
   hasStonesOfCurrentPlayer() {
-    return boarding.isMyColor(this.props.board, this.props.ctx.currentPlayer, fromOut(this.props.id))
+    return boarding.isMyColor(this.props.board, this.props.currentPlayer, fromOut(this.props.id))
   }
   hasPossibleMoves() {
     return this.possibleMoves().length > 0
@@ -64,7 +64,7 @@ class Field extends React.Component {
   // maybe better to name possibleDice
   possibleMoves() { 
     return this.props.openDice.filter((dice) => {
-      return boarding.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, fromOut(this.props.id), dice)
+      return boarding.mayMoveTo(this.props.board, this.props.currentPlayer, fromOut(this.props.id), dice)
     });
   }  
 
@@ -89,7 +89,7 @@ class Field extends React.Component {
 
     if (possible) {
       tokens.push(<Token key={tokens.length+1} 
-          player={this.props.ctx.currentPlayer} destination={true} />) 
+          player={this.props.currentPlayer} destination={true} />) 
     }
     return (
       <div id={"field-"+this.props.id}

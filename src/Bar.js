@@ -16,13 +16,13 @@ class Bar extends Field {
 
   possibleMoves() { 
     return this.props.openDice.filter((dice) => {
-      return boarding.mayMoveTo(this.props.board, this.props.ctx.currentPlayer, this.myID(), dice)
+      return boarding.mayMoveTo(this.props.board, this.props.currentPlayer, this.myID(), dice)
     });
   } 
 
   myID() {
-    if (player.isWhite(this.props.ctx.currentPlayer)) return 0 
-    if (player.isBlack(this.props.ctx.currentPlayer)) return 25
+    if (player.isWhite(this.props.currentPlayer)) return 0 
+    if (player.isBlack(this.props.currentPlayer)) return 25
     return false  
   }
 
@@ -32,7 +32,7 @@ class Bar extends Field {
     let tokens = this.props.board[this.props.id]
     let first = true
     tokens = tokens.map((token, index) => {
-      let isSelected = selected && ''+token === this.props.ctx.currentPlayer && first;
+      let isSelected = selected && ''+token === this.props.currentPlayer && first;
       if (isSelected) first = false;
       return <Token key={index} player={token} selected={isSelected} /> 
     })

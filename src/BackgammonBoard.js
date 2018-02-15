@@ -45,7 +45,7 @@ class BackgammonBoard extends React.Component {
       fields.push(
         <Field key={i} 
                 id={i} 
-                ctx={this.props.ctx} 
+                currentPlayer={this.props.ctx.currentPlayer} 
                 openDice={this.props.G.openDice} 
                 board={this.props.G.board}
                 selected={this.state.selected}
@@ -58,7 +58,7 @@ class BackgammonBoard extends React.Component {
       fields.push(
         <Field key={i} 
                 id={i} 
-                ctx={this.props.ctx} 
+                currentPlayer={this.props.ctx.currentPlayer} 
                 openDice={this.props.G.openDice} 
                 board={this.props.G.board}
                 selected={this.state.selected}
@@ -73,7 +73,7 @@ class BackgammonBoard extends React.Component {
       <div className="board">
         <div className="left"></div>
         <Bar id={26} 
-          ctx={this.props.ctx} 
+          currentPlayer={this.props.ctx.currentPlayer} 
           openDice={this.props.G.openDice} 
           board={this.props.G.board}
           selected={this.state.selected}
@@ -82,7 +82,7 @@ class BackgammonBoard extends React.Component {
           makeMove={this.props.makeMove} />
         <div className="right">
           <Out id={25} 
-              ctx={this.props.ctx} 
+              currentPlayer={this.props.ctx.currentPlayer} 
               openDice={this.props.G.openDice} 
               board={this.props.G.board}
               selected={this.state.selected}
@@ -91,7 +91,7 @@ class BackgammonBoard extends React.Component {
               makeMove={this.makeMove} />
           <div className="spacefill">&nbsp;</div>
           <Out id={0} 
-              ctx={this.props.ctx} 
+              currentPlayer={this.props.ctx.currentPlayer} 
               openDice={this.props.G.openDice} 
               board={this.props.G.board}
               selected={this.state.selected}

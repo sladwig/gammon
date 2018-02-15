@@ -21,11 +21,10 @@ class Out extends Field {
 
     if (possible) {
       tokens.push(<Token key={tokens.length+1} 
-          player={this.props.ctx.currentPlayer} destination={true} />) 
+          player={this.props.currentPlayer} destination={true} />) 
     }
 
     return (<div className={"out "+color}
-        key={this.props.id}
         onClick={() => this.onClick(this.props.id)}>
       {tokens}
     </div>)
