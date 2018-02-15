@@ -68,23 +68,20 @@ class Field extends React.Component {
     });
   }  
 
-
   // if this is a selectable field  
   isPossibleDestination() {
     return this.props.destinations.includes(this.props.id)
   }
 
-
   render() {
     let selected = this.props.selected === this.props.id 
-    let possibleDestination = this.isPossibleDestination() 
 
     let tokens = this.props.board[this.props.id]
     tokens = tokens.map((token, index) => {
       return <Token key={index} player={token} selected={selected && index === tokens.length-1} /> 
     })
 
-    if (possibleDestination) {
+    if (this.isPossibleDestination() ) {
       tokens.push(<Token key={tokens.length+1} 
           player={this.props.currentPlayer} destination={true} />) 
     }

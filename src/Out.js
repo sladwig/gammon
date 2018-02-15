@@ -5,9 +5,6 @@ import playerColor from './playerColor'
 
 class Out extends Field {
   render() {
-    let possibleDestination = this.isPossibleDestination() 
-
-
     let color = ""
     let tokens = this.props.board[this.props.id]
     if (tokens.length > 0) {
@@ -19,7 +16,7 @@ class Out extends Field {
       return <Token key={index} player={token} />
     })
 
-    if (possibleDestination) {
+    if (this.isPossibleDestination()) {
       tokens.push(<Token key={tokens.length+1} 
           player={this.props.currentPlayer} destination={true} />) 
     }
