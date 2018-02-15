@@ -77,17 +77,14 @@ class Field extends React.Component {
 
   render() {
     let selected = this.props.selected === this.props.id 
-    let possible = this.isPossibleDestination() 
+    let possibleDestination = this.isPossibleDestination() 
 
     let tokens = this.props.board[this.props.id]
     tokens = tokens.map((token, index) => {
-      if (selected && index === tokens.length-1) {
-        return <Token key={index} player={token} selected={true} /> 
-      }
-      return <Token key={index} player={token} />
+      return <Token key={index} player={token} selected={selected && index === tokens.length-1} /> 
     })
 
-    if (possible) {
+    if (possibleDestination) {
       tokens.push(<Token key={tokens.length+1} 
           player={this.props.currentPlayer} destination={true} />) 
     }
