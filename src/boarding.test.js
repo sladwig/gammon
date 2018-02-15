@@ -86,35 +86,6 @@ it('correctly checks if a field is blacks color', () => {
   expect(boarding.isMyColor(playerBlack('isBarAndRestHome'), black, 25)).toBe(true)
 });
 
-it('correctly checks if a field is free', () => {
-  expect(boarding.isFree(boardPosition.start, white, 1)).toBe(false)
-  expect(boarding.isFree(boardPosition.start, white, 2)).toBe(true)
-  expect(boarding.isFree(boardPosition.start, white, 6)).toBe(false)
-
-  expect(boarding.isFree(boardPosition.start, black, 1)).toBe(false)
-  expect(boarding.isFree(boardPosition.start, black, 2)).toBe(true)
-  expect(boarding.isFree(boardPosition.start, black, 6)).toBe(false)
-});
-
-it('correctly checks if a field has not more than one stone', () => {
-  expect(boarding.notMoreThanOne(playerWhite('bothHome'), 24)).toBe(true)
-  expect(boarding.notMoreThanOne(playerWhite('bothHome'), 23)).toBe(false)
-  expect(boarding.notMoreThanOne(playerWhite('bothHome'), 14)).toBe(true)
-
-  expect(boarding.notMoreThanOne(playerBlack('bothHome'), 1)).toBe(true)
-  expect(boarding.notMoreThanOne(playerBlack('bothHome'), 2)).toBe(false)
-  expect(boarding.notMoreThanOne(playerBlack('bothHome'), 14)).toBe(true)
-});
-
-it('correctly checks if a field has more than one stone', () => {
-  expect(boarding.moreThanOne(playerWhite('bothHome'), 24)).toBe(false)
-  expect(boarding.moreThanOne(playerWhite('bothHome'), 23)).toBe(true)
-  expect(boarding.moreThanOne(playerWhite('bothHome'), 14)).toBe(false)
-
-  expect(boarding.moreThanOne(playerBlack('bothHome'), 1)).toBe(false)
-  expect(boarding.moreThanOne(playerBlack('bothHome'), 2)).toBe(true)
-  expect(boarding.moreThanOne(playerBlack('bothHome'), 14)).toBe(false)
-});
 
 it('correctly checks if a field has exactly one stone', () => {
   expect(boarding.exactlyOne(playerWhite('bothHome'), 24)).toBe(true)

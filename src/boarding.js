@@ -110,18 +110,6 @@ const board = {
 
     return board[at].includes(parseInt(currentPlayer, 10))
   },
-  // TODO: in use?
-  isFree(board, currentPlayer, at) {
-    return board[at].length === 0 
-  },
-  // TODO: in use?
-  notMoreThanOne(board, at) {
-    return board[at].length < 2;
-  },
-  // TODO: in use?
-  moreThanOne(board, at) {
-    return !this.notMoreThanOne(board, at);
-  },
   exactlyOne(board, at) {
     return board[at].length === 1;
   },
