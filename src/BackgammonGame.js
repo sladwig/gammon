@@ -70,30 +70,25 @@ const Backgammon = Game({
       // don't mutate original state.
       let board = [...G.board];
       let openDice = [...G.openDice];
+      let currentPlayer = ctx.currentPlayer;
 
       // only continue if move is legal
-      if (!boarding.mayMoveTo(board, ctx.currentPlayer, at, dice)) {return {...G}}
+      if (!boarding.mayMoveTo(board, currentPlayer, at, dice)) {return {...G}}
 
-      let to = moving.to(ctx.currentPlayer, at, dice)
+      let to = moving.to(currentPlayer, at, dice)
       
-      let throwOut = null
       // throw out
-      if (!boarding.isMyColor(board, ctx.currentPlayer, to) &&
+      if (!boarding.isMyColor(board, currentPlayer, to) &&
         boarding.exactlyOne(board, to)) {
-        throwOut = board[to].pop();
+        board[26].push(board[to].pop())
       }
 
       // move stone
       // we want the correct one from the bar
       if (fromOut(at) === 26) {
-        board[to].push(...board[26].splice(board[26].indexOf(parseInt(ctx.currentPlayer, 10)), 1))
+        board[to].push(...board[26].splice(board[26].indexOf(parseInt(currentPlayer, 10)), 1))
       } else {
         board[to].push(board[fromOut(at)].pop());
-      }
-
-      // execute throw out
-      if (throwOut !== null) {
-        board[26].push(throwOut)
       }
 
       // remove actual dice from open Dice
