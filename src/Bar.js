@@ -1,31 +1,8 @@
 import React from 'react';
 import Field from './Field';
-import {player} from './moving'
-import boarding from './boarding'
 import Token from './Token'
 
 class Bar extends Field {
-  onClick(id) {
-    if (this.props.selected===this.myID()) {
-      this.props.selecting(null)
-      return
-    }
-
-    this.trySelecting(this.myID())
-  }
-
-  possibleMoves() { 
-    return this.props.openDice.filter((dice) => {
-      return boarding.mayMoveTo(this.props.board, this.props.currentPlayer, this.myID(), dice)
-    });
-  } 
-
-  myID() {
-    if (player.isWhite(this.props.currentPlayer)) return 0 
-    if (player.isBlack(this.props.currentPlayer)) return 25
-    return false  
-  }
-
   render() {
     let selected = this.props.selected === this.myID() 
 
@@ -40,7 +17,8 @@ class Bar extends Field {
     return (
       <div id={"field-"+this.props.id}
           className="bar"
-          onClick={() => this.onClick(this.myID())}>
+          onClick={() => this.onClick(this.myID())}
+          onDoubleClick={() => this.onDoubleClick(this.myID())}>
         {tokens}
       </div>
     );
