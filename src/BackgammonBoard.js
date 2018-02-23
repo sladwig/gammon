@@ -21,6 +21,7 @@ class BackgammonBoard extends React.Component {
   }
   makeMove = (from, dice) => {
     this.props.moves.moveStone(from, dice)
+    this.selecting(null)
   }
   selecting = (at) => {
     if (at === null) {
@@ -79,7 +80,7 @@ class BackgammonBoard extends React.Component {
           selected={this.state.selected}
           destinations={this.state.destinations}
           selecting={this.selecting}
-          makeMove={this.props.makeMove} />
+          makeMove={this.makeMove} />
         <div className="right">
           <Out id={25} 
               currentPlayer={this.props.ctx.currentPlayer} 
