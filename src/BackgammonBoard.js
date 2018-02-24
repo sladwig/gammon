@@ -48,75 +48,40 @@ class BackgammonBoard extends React.Component {
     const {currentPlayer, gameover} = this.props.ctx
     const {selected, destinations} = this.state
 
-    let fields = [];
-    for (let i=13; i < 25; i++) {
-      fields.push(
-        <Field key={i} 
-                id={i} 
-                currentPlayer={this.props.ctx.currentPlayer} 
-                openDice={openDice} 
-                board={board}
-                selected={selected}
-                destinations={destinations}
-                selecting={this.selecting}
-                makeMove={this.makeMove} />
-      );
-    }
-    for (let i=12; i > 0; i--) {
-      fields.push(
-        <Field key={i} 
-                id={i} 
-                currentPlayer={currentPlayer} 
-                openDice={openDice} 
-                board={board}
-                selected={selected}
-                destinations={destinations}
-                selecting={this.selecting}
-                makeMove={this.makeMove} />
-      );
+    const fieldProps = {
+      currentPlayer: currentPlayer,
+      openDice: openDice,
+      board: board,
+      selected: selected,
+      destinations: destinations,
+      selecting: this.selecting,
+      makeMove: this.makeMove,
     }
 
+    const diceAreaProps = {
+      openDice: openDice,
+      onClick: this.rollTheDice,
+      currentPlayer: currentPlayer,
+      winner: gameover,
+    }
+
+    // create Fields
+    let fieldsNumbers = Array.from(Array(24).keys()).map(i => i+1);
+    let fields = [...fieldsNumbers.slice(12), ...fieldsNumbers.slice(0,12).reverse()]
+
+    fields = fields.map(i=> <Field key={i} id={i} {...fieldProps} />)
 
     return (
       <div className="board">
         <div className="left"></div>
-        <Bar id={26} 
-          currentPlayer={currentPlayer} 
-          openDice={openDice} 
-          board={board}
-          selected={selected}
-          destinations={destinations}
-          selecting={this.selecting}
-          makeMove={this.makeMove} />
+        <Bar id={26} {...fieldProps} />
         <div className="right">
-          <Out id={25} 
-              currentPlayer={currentPlayer} 
-              openDice={openDice} 
-              board={board}
-              selected={selected}
-              destinations={destinations}
-              selecting={this.selecting}
-              makeMove={this.makeMove} />
-          <div className="spacefill">&nbsp;</div>
-          <Out id={0} 
-              currentPlayer={currentPlayer} 
-              openDice={openDice} 
-              board={board}
-              selected={selected}
-              destinations={destinations}
-              selecting={this.selecting}
-              makeMove={this.makeMove} />
+          <Out id={25} {...fieldProps} />
+          <div className="spacefill"></div>
+          <Out id={0} {...fieldProps} />
         </div>
-        <DiceArea openDice={openDice} 
-            onClick={this.rollTheDice} 
-            currentPlayer={currentPlayer} 
-            player="1" 
-            winner={gameover} />
-        <DiceArea openDice={openDice} 
-            onClick={this.rollTheDice} 
-            currentPlayer={currentPlayer} 
-            player="0"
-            winner={gameover} />
+        <DiceArea player="1" {...diceAreaProps} />
+        <DiceArea player="0" {...diceAreaProps} />
 
         {fields}
       </div>
