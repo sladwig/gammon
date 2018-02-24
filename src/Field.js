@@ -51,7 +51,7 @@ class Field extends React.Component {
     // home out situation
     let board = this.props.board
     let currentPlayer = this.props.currentPlayer
-    if (boarding.isHome(board, currentPlayer) 
+    if (this.isPossibleDestination() && boarding.isHome(board, currentPlayer) 
       && boarding.isBiggestStone(board, currentPlayer, selected)) {
       let highestDice = this.props.openDice.reduce((a,b) => {return Math.max(a,b)})
       this.props.makeMove(selected, highestDice)
