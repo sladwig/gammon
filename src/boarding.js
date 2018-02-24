@@ -56,6 +56,7 @@ const board = {
 
     return true;
   },
+  
   hasPossibleMoves(board, currentPlayer, dices) {
     return dices.filter((dice) => { 
       let result = []
@@ -65,9 +66,11 @@ const board = {
       return result.includes(true)
     }).length > 0
   },
+
   isBar(board, currentPlayer) {
     return board[26].includes(parseInt(currentPlayer, 10))
   },
+
   isHome(board, currentPlayer) {
     if (this.isBar(board, currentPlayer)) return false;
 
@@ -82,9 +85,11 @@ const board = {
     }
     return false;
   },
+
   isBiggestStone(board, currentPlayer, at) {
     return at === this.biggestStone(board, currentPlayer) 
   },
+
   biggestStone(board, currentPlayer) {
     let result = undefined;
     if (player.isWhite(currentPlayer)) {
@@ -95,9 +100,11 @@ const board = {
     }
     return result
   },
+
   isOccupied(board, currentPlayer, at) {
     return !this.isMyColor(board, currentPlayer, at) && board[at].length > 1
   },
+
   isMyColor(board, currentPlayer, at) {
     // for in bar purposes we handle this exceptions 
     // since normaly this are not the colors of the player 
@@ -110,6 +117,7 @@ const board = {
 
     return board[at].includes(parseInt(currentPlayer, 10))
   },
+
   exactlyOne(board, at) {
     return board[at].length === 1;
   },

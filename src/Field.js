@@ -27,7 +27,7 @@ function allSame(possibleMoves) {
 
 class Field extends React.Component {
   onClick(id) {
-    let selected = this.props.selected
+    const {selected, board, currentPlayer, selecting, makeMove, openDice} = this.props
 
     // nothing selected -> select
     if (!selected && selected !== 0) {
@@ -36,7 +36,7 @@ class Field extends React.Component {
     } 
     // deselect if same value
     if (selected===this.myID()) {
-      this.props.selecting(null)
+      selecting(null)
       return
     }
 
@@ -44,17 +44,15 @@ class Field extends React.Component {
     // check if possible destination -> make move
     if (this.isPossibleDestination()) {
       let diceValue = moving.distance(selected, id);
-      this.props.makeMove(selected, diceValue)
+      makeMove(selected, diceValue)
       return
     } 
 
     // home out situation
-    let board = this.props.board
-    let currentPlayer = this.props.currentPlayer
     if (this.isPossibleDestination() && boarding.isHome(board, currentPlayer) 
       && boarding.isBiggestStone(board, currentPlayer, selected)) {
-      let highestDice = this.props.openDice.reduce((a,b) => {return Math.max(a,b)})
-      this.props.makeMove(selected, highestDice)
+      let highestDice = openDice.reduce((a,b) => {return Math.max(a,b)})
+      makeMove(selected, highestDice)
       return
     }
 
@@ -64,46 +62,51 @@ class Field extends React.Component {
   onDoubleClick(id) {
     let selected = this.myID()
     let possibleMoves = this.possibleMoves()
+    const { makeMove, openDice, board, currentPlayer } = this.props;
 
     // move if there is just one possible move
     // or move if we have a pasch
     if (justOne(possibleMoves) || allSame(possibleMoves)) {
-      this.props.makeMove(selected, possibleMoves[0])
+      makeMove(selected, possibleMoves[0])
       return
     }
 
     // move if isHome and ...
-    if (boarding.isHome(this.props.board, this.props.currentPlayer)) {
+    if (boarding.isHome(board, currentPlayer)) {
       // ... direct out with a dice
-      let distanceHome = moving.distance(out(this.props.currentPlayer), selected)
-      if (this.props.openDice.includes(distanceHome)) {
-        this.props.makeMove(selected, distanceHome)
+      let distanceHome = moving.distance(out(currentPlayer), selected)
+      if (openDice.includes(distanceHome)) {
+        makeMove(selected, distanceHome)
         return
       } 
 
       // ... isBiggestStone and we have a higher dice than distance home
       // always use the biggest dice
-      let higherDice = this.props.openDice.sort().reverse().find((dice) => (dice > distanceHome))
-      if (boarding.isBiggestStone(this.props.board, this.props.currentPlayer, selected) && higherDice) {
-        this.props.makeMove(selected, higherDice)
+      let higherDice = openDice.sort().reverse().find((dice) => (dice > distanceHome))
+      if (boarding.isBiggestStone(board, currentPlayer, selected) && higherDice) {
+        makeMove(selected, higherDice)
         return        
       }
     }
   }
   myID() {
-    if (this.props.id === 26) {
-      if (player.isWhite(this.props.currentPlayer)) return 0 
-      if (player.isBlack(this.props.currentPlayer)) return 25
+    const {id, currentPlayer} = this.props
+
+    if (id === 26) {
+      if (player.isWhite(currentPlayer)) return 0 
+      if (player.isBlack(currentPlayer)) return 25
     }
-    return this.props.id 
+    return id 
   }
 
   trySelecting(id) {
-    if (!this.hasStones()) { return this.props.selecting(null) } 
-    if (!this.hasStonesOfCurrentPlayer()) { return this.props.selecting(null) }
-    if (!this.hasPossibleMoves()) { return this.props.selecting(null) } 
+    const {selecting} = this.props
 
-    this.props.selecting(id)
+    if (!this.hasStones()) { return selecting(null) } 
+    if (!this.hasStonesOfCurrentPlayer()) { return selecting(null) }
+    if (!this.hasPossibleMoves()) { return selecting(null) } 
+
+    selecting(id)
   }
   hasStones(){
     return this.props.board[this.props.id].length > 0;
@@ -127,22 +130,23 @@ class Field extends React.Component {
   }
 
   render() {
-    let selected = this.props.selected === this.props.id 
+    const {selected, id, board, currentPlayer} = this.props
+    const isSelected = selected === id 
 
-    let tokens = this.props.board[this.props.id]
+    let tokens = board[id]
     tokens = tokens.map((token, index) => {
-      return <Token key={index} player={token} selected={selected && index === tokens.length-1} /> 
+      return <Token key={index} player={token} selected={isSelected && index === tokens.length-1} /> 
     })
 
     if (this.isPossibleDestination() ) {
       tokens.push(<Token key={tokens.length+1} 
-          player={this.props.currentPlayer} destination={true} />) 
+          player={currentPlayer} destination={true} />) 
     }
     return (
-      <div id={"field-"+this.props.id}
+      <div id={"field-"+id}
           className="field"
-          onClick={() => this.onClick(this.props.id)}
-          onDoubleClick={() => this.onDoubleClick(this.props.id)}>
+          onClick={() => this.onClick(id)}
+          onDoubleClick={() => this.onDoubleClick(id)}>
         {tokens}
       </div>
     );

@@ -28,11 +28,14 @@ class BackgammonBoard extends React.Component {
       this.setState({selected: null, destinations: []})
       return
     }
-    let destinations = this.props.G.openDice.filter(
+    const {currentPlayer} = this.props.ctx
+    const {openDice, board} = this.props.G
+
+    let destinations = openDice.filter(
       (dice) => 
-      boarding.mayMoveTo(this.props.G.board, this.props.ctx.currentPlayer, at, dice)
+      boarding.mayMoveTo(board, currentPlayer, at, dice)
     ).map((dice) => 
-      moving.to(this.props.ctx.currentPlayer, at, dice)
+      moving.to(currentPlayer, at, dice)
     )
 
     this.setState({selected: at, destinations: destinations})
@@ -41,16 +44,20 @@ class BackgammonBoard extends React.Component {
 
 
   render() {
+    const {openDice, board} = this.props.G
+    const {currentPlayer, gameover} = this.props.ctx
+    const {selected, destinations} = this.state
+
     let fields = [];
     for (let i=13; i < 25; i++) {
       fields.push(
         <Field key={i} 
                 id={i} 
                 currentPlayer={this.props.ctx.currentPlayer} 
-                openDice={this.props.G.openDice} 
-                board={this.props.G.board}
-                selected={this.state.selected}
-                destinations={this.state.destinations}
+                openDice={openDice} 
+                board={board}
+                selected={selected}
+                destinations={destinations}
                 selecting={this.selecting}
                 makeMove={this.makeMove} />
       );
@@ -59,11 +66,11 @@ class BackgammonBoard extends React.Component {
       fields.push(
         <Field key={i} 
                 id={i} 
-                currentPlayer={this.props.ctx.currentPlayer} 
-                openDice={this.props.G.openDice} 
-                board={this.props.G.board}
-                selected={this.state.selected}
-                destinations={this.state.destinations}
+                currentPlayer={currentPlayer} 
+                openDice={openDice} 
+                board={board}
+                selected={selected}
+                destinations={destinations}
                 selecting={this.selecting}
                 makeMove={this.makeMove} />
       );
@@ -74,42 +81,42 @@ class BackgammonBoard extends React.Component {
       <div className="board">
         <div className="left"></div>
         <Bar id={26} 
-          currentPlayer={this.props.ctx.currentPlayer} 
-          openDice={this.props.G.openDice} 
-          board={this.props.G.board}
-          selected={this.state.selected}
-          destinations={this.state.destinations}
+          currentPlayer={currentPlayer} 
+          openDice={openDice} 
+          board={board}
+          selected={selected}
+          destinations={destinations}
           selecting={this.selecting}
           makeMove={this.makeMove} />
         <div className="right">
           <Out id={25} 
-              currentPlayer={this.props.ctx.currentPlayer} 
-              openDice={this.props.G.openDice} 
-              board={this.props.G.board}
-              selected={this.state.selected}
-              destinations={this.state.destinations}
+              currentPlayer={currentPlayer} 
+              openDice={openDice} 
+              board={board}
+              selected={selected}
+              destinations={destinations}
               selecting={this.selecting}
               makeMove={this.makeMove} />
           <div className="spacefill">&nbsp;</div>
           <Out id={0} 
-              currentPlayer={this.props.ctx.currentPlayer} 
-              openDice={this.props.G.openDice} 
-              board={this.props.G.board}
-              selected={this.state.selected}
-              destinations={this.state.destinations}
+              currentPlayer={currentPlayer} 
+              openDice={openDice} 
+              board={board}
+              selected={selected}
+              destinations={destinations}
               selecting={this.selecting}
               makeMove={this.makeMove} />
         </div>
-        <DiceArea openDice={this.props.G.openDice} 
+        <DiceArea openDice={openDice} 
             onClick={this.rollTheDice} 
-            currentPlayer={this.props.ctx.currentPlayer} 
+            currentPlayer={currentPlayer} 
             player="1" 
-            winner={this.props.ctx.gameover} />
-        <DiceArea openDice={this.props.G.openDice} 
+            winner={gameover} />
+        <DiceArea openDice={openDice} 
             onClick={this.rollTheDice} 
-            currentPlayer={this.props.ctx.currentPlayer} 
+            currentPlayer={currentPlayer} 
             player="0"
-            winner={this.props.ctx.gameover} />
+            winner={gameover} />
 
         {fields}
       </div>

@@ -4,29 +4,33 @@ import playerColor from './playerColor'
 
 class DiceArea extends React.Component {
   handleClick = () => {
-    if (this.props.currentPlayer === "any" || this.props.currentPlayer === this.props.player) {
-      this.props.onClick(this.props.player)
+    const {currentPlayer, player, onClick} = this.props
+    if (currentPlayer === "any" || currentPlayer === player) {
+      onClick(player)
     }
   }
 
   render() {
-    if (this.props.winner) {
-      let winner = this.props.winner === this.props.player ? "We have a winner!" : "well..."
+    const {winner, player, currentPlayer, openDice} = this.props
+
+    // winner text if we have a winner
+    if (winner) {
+      let winnerText = winner === player ? "We have a winner!" : "well..."
       return (
-        <div className={"dice-"+playerColor(this.props.player)} onClick={this.handleClick}>
-          <p>{winner}</p>
+        <div className={"dice-"+playerColor(player)} onClick={this.handleClick}>
+          <p>{winnerText}</p>
         </div>
       );
     }
 
 
-    let dices = this.props.openDice 
+    let dices = openDice 
 
     if (dices.length === 0) {
       dices = <span>roll dice</span>
     } else {
       if (Array.isArray(dices[0])) {
-        dices = dices.filter((dice) => (dice[0] === this.props.player))
+        dices = dices.filter((dice) => (dice[0] === player))
         if (dices.length === 0) {
           dices = <span>roll dice</span>
         } else {
@@ -35,7 +39,7 @@ class DiceArea extends React.Component {
       }
     }
 
-    if (this.props.currentPlayer !== this.props.player && this.props.currentPlayer !== "any" ){
+    if (currentPlayer !== player && currentPlayer !== "any" ){
       dices = []
     }
     if (Array.isArray(dices)) {
@@ -46,7 +50,7 @@ class DiceArea extends React.Component {
 
     
     return (
-      <div className={"dice-"+playerColor(this.props.player)} onClick={this.handleClick}>
+      <div className={"dice-"+playerColor(player)} onClick={this.handleClick}>
         {dices}
       </div>
     );
