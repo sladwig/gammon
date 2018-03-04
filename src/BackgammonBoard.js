@@ -66,7 +66,7 @@ class BackgammonBoard extends React.Component {
     }
 
     // create Fields
-    let fieldsNumbers = Array.from(Array(24).keys()).map(i => i+1);
+    let fieldsNumbers = Array.from(Array(24),(_,i)=>i+1)
     let fields = [...fieldsNumbers.slice(12), ...fieldsNumbers.slice(0,12).reverse()]
 
     fields = fields.map(i=> <Field key={i} id={i} {...fieldProps} />)
