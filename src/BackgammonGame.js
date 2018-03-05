@@ -35,6 +35,8 @@ function hasRolledDice(openDice) {
 }
 
 const Backgammon = Game({
+  name: 'backgammon',
+  
   setup: () => ({
     openDice: [],
     board: boardPosition.start,
@@ -49,12 +51,12 @@ const Backgammon = Game({
       // first turn both are playing for first move
       if (isFirstTurn(ctx)) {
         if (!playerRolledDice(openDice, player)) {
-          openDice.push([player, rollableDice1.roll()])
+          openDice.push([player, rollableDice1.D6()])
         }
 
       // otherwise roll two dice
       } else {
-        openDice = [rollableDice1.roll(),rollableDice2.roll()]
+        openDice = [rollableDice1.D6(),rollableDice2.D6()]
 
         // 4 moves if the eyes are equal
         if (openDice[0] === openDice[1]) {

@@ -17,7 +17,7 @@ class TestBoard extends React.Component {
   }
 }
 function dice(returnValue) { 
-  return {roll: ()=>(returnValue)}
+  return {D6: ()=>(returnValue)}
 }
 
 let black = "0"
