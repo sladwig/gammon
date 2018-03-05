@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import {Client} from 'boardgame.io/client';
+import {Client} from 'boardgame.io/react';
 import BackgammonGame from './BackgammonGame'
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
