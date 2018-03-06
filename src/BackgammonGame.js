@@ -33,6 +33,15 @@ function hasTwoDice(openDice) {
 function hasRolledDice(openDice) {
   return openDice.length > 1
 }
+function moveStoneOn(board, from, to) {
+  // instead of pushing and poping
+  // we create a new 'clone' of the arrays 
+  let popping = board[from].slice(-1)
+  board[to] = [...board[to], ...popping]
+  board[from] = board[from].slice(0, -1)
+}
+const withoutIndex = (array, at) => ([...array.slice(0,at), ...array.slice(++at)])
+
 
 const Backgammon = Game({
   name: 'backgammon',
@@ -82,15 +91,18 @@ const Backgammon = Game({
       // throw out
       if (!boarding.isMyColor(board, currentPlayer, to) &&
         boarding.exactlyOne(board, to)) {
-        board[26].push(board[to].pop())
+        moveStoneOn(board, to, 26)
       }
 
       // move stone
       // we want the correct one from the bar
       if (fromOut(at) === 26) {
-        board[to].push(...board[26].splice(board[26].indexOf(parseInt(currentPlayer, 10)), 1))
+        let stoneIndex = board[26].indexOf(parseInt(currentPlayer, 10))
+        let popping = board[26][stoneIndex]
+        board[to] = [...board[to], popping]
+        board[26] = withoutIndex(board[26], stoneIndex)
       } else {
-        board[to].push(board[fromOut(at)].pop());
+        moveStoneOn(board, fromOut(at), to)
       }
 
       // remove actual dice from open Dice
@@ -106,6 +118,7 @@ const Backgammon = Game({
         return ctx.currentPlayer;
       }
     },
+    // undo: true,
     onTurnEnd: (G, ctx) => ( {...G, openDice: []} ),
     phases: [
       {
