@@ -4,6 +4,7 @@
   grid-template-rows: repeat(11, 1fr);  
   grid-gap: 5px;
   height: 100%;
+  background: rgba(219, 205, 165, 1);
 }
 .bar, .left, .right {
   background: rgba(210, 195, 155, 1);
