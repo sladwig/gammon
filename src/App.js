@@ -8,7 +8,7 @@ const App = Client({
   game: BackgammonGame, 
   board: BackgammonBoard , 
   debug: false,
-  // multiplayer: true,
+  multiplayer: { server: 'localhost:8000' },
 });
 
 export default App;
