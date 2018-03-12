@@ -1,6 +1,5 @@
 import React from 'react';
 import DiceArea from './DiceArea';
-import { Random } from 'boardgame.io/core';
 import './BackgammonBoard.css'
 import Field from './Field';
 import Bar from './Bar';
@@ -16,7 +15,7 @@ class BackgammonBoard extends React.Component {
 
   rollTheDice = (player) => {
     if (this.props.G.openDice.length < 2) {
-      this.props.moves.rollDice(player, Random)
+      this.props.moves.rollDice(player)
     }
   }
   makeMove = (from, dice) => {

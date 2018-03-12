@@ -1,6 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {Client} from 'boardgame.io/react';
+import Random from './Dice'
 import BackgammonGame from './BackgammonGame'
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
@@ -8,6 +9,7 @@ import boardPosition from './boardPosition';
 import generateBoard from './generateBoard'
 import {boardScenarios} from './generateBoard'; 
 
+jest.mock('./Dice');
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -17,7 +19,7 @@ class TestBoard extends React.Component {
   }
 }
 function dice(returnValue) { 
-  return {D6: ()=>(returnValue)}
+  Random.D6.mockImplementation(() => returnValue)
 }
 
 let black = "0"
@@ -26,13 +28,11 @@ let white = "1"
 
 // it('correctly handles first move', () => {
 // it('correctly correctly sets first player', () => {
-
 it('it correctly starts game', () => {
   // using normal start configuration
   let Backgammon = {...BackgammonGame, setup: () => (
     {openDice: [], board: boardPosition.start }
   )};
-
 
   const Board = Client({ game: Backgammon , board: TestBoard});
   const game = Enzyme.mount(<Board />);
@@ -43,16 +43,16 @@ it('it correctly starts game', () => {
   expect(board.props.ctx.phase).toEqual("rollingDice")
   expect(board.props.G.openDice).toEqual([])
 
-
-  board.props.moves.rollDice("0", dice(4))
+  dice(4)
+  board.props.moves.rollDice("0")
   
   expect(board.props.ctx.turn).toBe(0)
   expect(board.props.ctx.currentPlayer).toEqual("any")
   expect(board.props.ctx.phase).toEqual("rollingDice")
   expect(board.props.G.openDice).toEqual([["0", 4]])
 
-
-  board.props.moves.rollDice("0", dice(3))
+  dice(3)
+  board.props.moves.rollDice("0")
 
   expect(board.props.ctx.turn).toBe(0)
   expect(board.props.ctx.currentPlayer).toEqual("any")
@@ -61,16 +61,19 @@ it('it correctly starts game', () => {
 
 
   // should reset dice correctly
-  board.props.moves.rollDice("1", dice(4))
+  dice(4)
+  board.props.moves.rollDice("1")
 
   expect(board.props.ctx.turn).toBe(0)
   expect(board.props.ctx.currentPlayer).toEqual("any")
   expect(board.props.ctx.phase).toEqual("rollingDice")
   expect(board.props.G.openDice).toEqual([])
 
+  dice(4)
+  board.props.moves.rollDice("1")
 
-  board.props.moves.rollDice("1", dice(4))
-  board.props.moves.rollDice("0", dice(2))
+  dice(2)
+  board.props.moves.rollDice("0")
 
   expect(board.props.ctx.turn).toBe(0)
   expect(board.props.ctx.currentPlayer).toEqual("1")
@@ -93,15 +96,14 @@ it('it correctly starts game', () => {
   expect(board.props.ctx.phase).toEqual("rollingDice")
   expect(board.props.G.openDice).toEqual([])
 
-
-  board.props.moves.rollDice("0", dice(4))
+  dice(4)
+  board.props.moves.rollDice("0")
 
   expect(board.props.ctx.turn).toBe(1)
   expect(board.props.ctx.currentPlayer).toEqual("0")
   expect(board.props.ctx.phase).toEqual("movingStones")
   expect(board.props.G.openDice).toEqual([4,4,4,4])
 });
-
 
 
 it('it correctly ends round when there is no possible move left', () => {
@@ -119,10 +121,12 @@ it('it correctly ends round when there is no possible move left', () => {
   expect(board.props.ctx.phase).toEqual("rollingDice")
   expect(board.props.G.openDice).toEqual([])
 
-  board.props.moves.rollDice("0", dice(2))
+  dice(2)
+  board.props.moves.rollDice("0")
   expect(board.props.G.openDice).toEqual([["0", 2]])
 
-  board.props.moves.rollDice("1", dice(1))
+  dice(1)
+  board.props.moves.rollDice("1")
 
   // it's blacks turn, but since black cant move
   // new round for white
@@ -146,10 +150,12 @@ it('it correctly moves stone out of bar', () => {
   expect(board.props.ctx.phase).toEqual("rollingDice")
   expect(board.props.G.openDice).toEqual([])
 
-  board.props.moves.rollDice(black, dice(4))
+  dice(4)
+  board.props.moves.rollDice(black)
   expect(board.props.G.openDice).toEqual([[black, 4]])
 
-  board.props.moves.rollDice(white, dice(3))
+  dice(3)
+  board.props.moves.rollDice(white)
 
   expect(board.props.ctx.turn).toBe(0)
   expect(board.props.ctx.currentPlayer).toEqual(black)
@@ -181,10 +187,12 @@ it('it correctly starts with a new set of dice after one dice is not movable any
   expect(board.props.ctx.phase).toEqual("rollingDice")
   expect(board.props.G.openDice).toEqual([])
 
-  board.props.moves.rollDice(black, dice(3))
+  dice(3)
+  board.props.moves.rollDice(black)
   expect(board.props.G.openDice).toEqual([[black, 3]])
 
-  board.props.moves.rollDice(white, dice(4))
+  dice(4)
+  board.props.moves.rollDice(white)
 
   // it's blacks turn, but since black cant move
   // new round for white
