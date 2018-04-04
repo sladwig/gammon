@@ -2,7 +2,6 @@ import {Game} from 'boardgame.io/core';
 import moving from './moving';
 import boarding from './boarding';
 import boardPosition from './boardPosition';
-import Random from './Dice';
 
 // for testing scenarios
 // import generateBoard from './generateBoard';
@@ -55,18 +54,21 @@ const Backgammon = Game({
   }),
 
   moves: {
-    rollDice(G, ctx, player) {
+    rollDice(G, ctx, player, dice) {
       let openDice = [...G.openDice]; // don't mutate original
-
+      // this is here for easy mocking, since we
+      // cant reach the Random package in core...
+      const random = dice === undefined ? ctx.random : dice
+      
       // first turn both are playing for first move
       if (isFirstTurn(ctx)) {
         if (!playerRolledDice(openDice, player)) {
-          openDice.push([player, Random.D6()])
+          openDice.push([player, random.D6()])
         }
 
       // otherwise roll two dice
       } else {
-        openDice = [Random.D6(),Random.D6()]
+        openDice = [random.D6(),random.D6()]
 
         // 4 moves if the eyes are equal
         if (openDice[0] === openDice[1]) {

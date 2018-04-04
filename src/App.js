@@ -6,9 +6,10 @@ import BackgammonGame from './BackgammonGame';
 
 const App = Client({ 
   game: BackgammonGame, 
-  board: BackgammonBoard , 
+  board: BackgammonBoard, 
   debug: false,
-  multiplayer: { server: 'localhost:8000' },
+  multiplayer: false,
+  // multiplayer: { server: 'localhost:8000' },
 });
 
 export default App;
