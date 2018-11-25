@@ -1,6 +1,6 @@
 import React from 'react';
 import './DiceArea.css';
-import playerColor from './playerColor' 
+import playerColor from './playerColor'
 
 class DiceArea extends React.Component {
   handleClick = () => {
@@ -10,45 +10,37 @@ class DiceArea extends React.Component {
     }
   }
 
+  winnerArea = (winner) => {
+    return (
+      let winnerText = winner === player ? "We have a winner!" : "well..."
+      <div className={"dice-"+playerColor(player)} onClick={this.handleClick}>
+        <p>{winnerText}</p>
+      </div>
+    );
+  }
+
+  noRolled = (dices) => dices.length === 0
+  firsrRoundRoll = (dices) => Array.isArray(dices[0])
+  diceForPlayer = (dices) => dices.filter((dice) => (dice[0] === this.props.player)).map((dice) => (dice[1]))
+  playersTurn = () => this.props.currentPlayer === this.props.player
+  firstRound = () => this.props.currentPlayer === "any"
+  Dice = (dice, index) => (
+      <div className={'dice dice-'+dice} key={'dice-'+index}></div>
+    )
+
   render() {
     const {winner, player, currentPlayer, openDice} = this.props
 
     // winner text if we have a winner
-    if (winner) {
-      let winnerText = winner === player ? "We have a winner!" : "well..."
-      return (
-        <div className={"dice-"+playerColor(player)} onClick={this.handleClick}>
-          <p>{winnerText}</p>
-        </div>
-      );
-    }
+    if (winner) return winnerArea(winner)
 
+    let dices = openDice
 
-    let dices = openDice 
+    if (firstRoundRoll(dices)) dices = diceForPlayer(dices)
+    if (!playersTurn() && !firstRound()) dices = []
+    dices = dices.map(Dice)
+    if (noRolled(dices)) dices = <span>roll dice</span>
 
-    if (dices.length === 0) {
-      dices = <span>roll dice</span>
-    } else {
-      if (Array.isArray(dices[0])) {
-        dices = dices.filter((dice) => (dice[0] === player))
-        if (dices.length === 0) {
-          dices = <span>roll dice</span>
-        } else {
-          dices = dices.map((dice) => (dice[1]))
-        }
-      }
-    }
-
-    if (currentPlayer !== player && currentPlayer !== "any" ){
-      dices = []
-    }
-    if (Array.isArray(dices)) {
-      dices = dices.map((dice, index) => (
-        <div className={'dice dice-'+dice} key={'dice-'+index}></div>
-      ))
-    }
-
-    
     return (
       <div className={"dice-"+playerColor(player)} onClick={this.handleClick}>
         {dices}
