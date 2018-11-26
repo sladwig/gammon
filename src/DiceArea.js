@@ -29,7 +29,7 @@ class DiceArea extends React.Component {
   );
 
   render() {
-    const { winner, player, currentPlayer, openDice } = this.props;
+    const { winner, player, openDice } = this.props;
 
     // winner text if we have a winner
     if (winner) return this.winnerArea(winner);

@@ -10,7 +10,7 @@ const white = "1"
 const black = "0"
 
 // for cleanup
-function playerWhite(scenario) { 
+function playerWhite(scenario) {
   return generateBoard(boardScenarios[scenario], white)
 }
 function playerBlack(scenario) {
@@ -23,7 +23,7 @@ it('correctly checks if white player is bar', () => {
   expect(boarding.isBar(playerWhite('isBarAndRestHome'), white)).toBe(true)
 });
 
-it('correctly checks if white player is bar', () => {
+it('correctly checks if black player is bar', () => {
   expect(boarding.isBar(playerBlack('isHome'), black)).toBe(false)
   expect(boarding.isBar(playerBlack('isBarAndRestHome'), black)).toBe(true)
 });
@@ -74,8 +74,8 @@ it('correctly checks if a field is whites color', () => {
   expect(boarding.isMyColor(boardPosition.start, white, 1)).toBe(true)
   expect(boarding.isMyColor(boardPosition.start, white, 2)).toBe(false)
   expect(boarding.isMyColor(boardPosition.start, white, 6)).toBe(false)
-  expect(boarding.isMyColor(boardPosition.start, white, 0)).toBe(false) 
-  expect(boarding.isMyColor(playerWhite('isBarAndRestHome'), white, 25)).toBe(true) 
+  expect(boarding.isMyColor(boardPosition.start, white, 0)).toBe(false)
+  expect(boarding.isMyColor(playerWhite('isBarAndRestHome'), white, 25)).toBe(true)
 });
 
 it('correctly checks if a field is blacks color', () => {

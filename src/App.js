@@ -4,11 +4,11 @@ import {Client} from 'boardgame.io/react';
 import BackgammonBoard from './BackgammonBoard';
 import BackgammonGame from './BackgammonGame';
 
-const App = Client({ 
-  game: BackgammonGame, 
-  board: BackgammonBoard , 
+const App = Client({
+  game: BackgammonGame,
+  board: BackgammonBoard ,
   debug: false,
-  multiplayer: { server: 'localhost:8000' },
+  // multiplayer: { server: 'localhost:8000' },
 });
 
 export default App;
