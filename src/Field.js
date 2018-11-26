@@ -1,152 +1,172 @@
 import React from 'react';
 import moving from './moving';
 import boarding from './boarding';
-import Token from './Token'
-import './Field.css'
-import {player} from './moving'
-
+import Token from './Token';
+import './Field.css';
+import { player } from './moving';
 
 function fromOut(id) {
-  if (id === 25 || id === 0) return 26
-  return id
+  if (id === 25 || id === 0) return 26;
+  return id;
 }
 
 function out(currentPlayer) {
-  if (currentPlayer === "0") {return 0}
-  if (currentPlayer === "1") {return 25}
-  return false
+  if (currentPlayer === '0') {
+    return 0;
+  }
+  if (currentPlayer === '1') {
+    return 25;
+  }
+  return false;
 }
 
 function justOne(possibleMoves) {
-  return possibleMoves.length === 1
+  return possibleMoves.length === 1;
 }
 function allSame(possibleMoves) {
-  if (possibleMoves.length < 2) return false
-  return possibleMoves[0] === possibleMoves[1]
+  if (possibleMoves.length < 2) return false;
+  return possibleMoves[0] === possibleMoves[1];
 }
 
 class Field extends React.Component {
   onClick(id) {
-    const {selected, board, currentPlayer, selecting, makeMove, openDice} = this.props
+    const { selected, board, currentPlayer, selecting, makeMove, openDice } = this.props;
 
     // nothing selected -> select
     if (!selected && selected !== 0) {
-      this.trySelecting(this.myID())
-      return 
-    } 
+      this.trySelecting(this.myID());
+      return;
+    }
     // deselect if same value
-    if (selected===this.myID()) {
-      selecting(null)
-      return
+    if (selected === this.myID()) {
+      selecting(null);
+      return;
     }
 
     // we have a selected
     // check if possible destination -> make move
     if (this.isPossibleDestination()) {
       let diceValue = moving.distance(selected, id);
-      makeMove(selected, diceValue)
-      return
-    } 
+      makeMove(selected, diceValue);
+      return;
+    }
 
     // home out situation
-    if (this.isPossibleDestination() && boarding.isHome(board, currentPlayer) 
-      && boarding.isBiggestStone(board, currentPlayer, selected)) {
-      let highestDice = openDice.reduce((a,b) => {return Math.max(a,b)})
-      makeMove(selected, highestDice)
-      return
+    if (
+      this.isPossibleDestination() &&
+      boarding.isHome(board, currentPlayer) &&
+      boarding.isBiggestStone(board, currentPlayer, selected)
+    ) {
+      let highestDice = openDice.reduce((a, b) => {
+        return Math.max(a, b);
+      });
+      makeMove(selected, highestDice);
+      return;
     }
 
     // else try to select
-    this.trySelecting(this.myID())    
+    this.trySelecting(this.myID());
   }
   onDoubleClick(id) {
-    let selected = this.myID()
-    let possibleMoves = this.possibleMoves()
+    let selected = this.myID();
+    let possibleMoves = this.possibleMoves();
     const { makeMove, openDice, board, currentPlayer } = this.props;
 
     // move if there is just one possible move
     // or move if we have a pasch
     if (justOne(possibleMoves) || allSame(possibleMoves)) {
-      makeMove(selected, possibleMoves[0])
-      return
+      makeMove(selected, possibleMoves[0]);
+      return;
     }
 
     // move if isHome and ...
     if (boarding.isHome(board, currentPlayer)) {
       // ... direct out with a dice
-      let distanceHome = moving.distance(out(currentPlayer), selected)
+      let distanceHome = moving.distance(out(currentPlayer), selected);
       if (openDice.includes(distanceHome)) {
-        makeMove(selected, distanceHome)
-        return
-      } 
+        makeMove(selected, distanceHome);
+        return;
+      }
 
       // ... isBiggestStone and we have a higher dice than distance home
       // always use the biggest dice
-      let higherDice = openDice.sort().reverse().find((dice) => (dice > distanceHome))
+      let higherDice = openDice
+        .sort()
+        .reverse()
+        .find(dice => dice > distanceHome);
       if (boarding.isBiggestStone(board, currentPlayer, selected) && higherDice) {
-        makeMove(selected, higherDice)
-        return        
+        makeMove(selected, higherDice);
+        return;
       }
     }
   }
   myID() {
-    const {id, currentPlayer} = this.props
+    const { id, currentPlayer } = this.props;
 
     if (id === 26) {
-      if (player.isWhite(currentPlayer)) return 0 
-      if (player.isBlack(currentPlayer)) return 25
+      if (player.isWhite(currentPlayer)) return 0;
+      if (player.isBlack(currentPlayer)) return 25;
     }
-    return id 
+    return id;
   }
 
   trySelecting(id) {
-    const {selecting} = this.props
+    const { selecting } = this.props;
 
-    if (!this.hasStones()) { return selecting(null) } 
-    if (!this.hasStonesOfCurrentPlayer()) { return selecting(null) }
-    if (!this.hasPossibleMoves()) { return selecting(null) } 
+    if (!this.hasStones()) {
+      return selecting(null);
+    }
+    if (!this.hasStonesOfCurrentPlayer()) {
+      return selecting(null);
+    }
+    if (!this.hasPossibleMoves()) {
+      return selecting(null);
+    }
 
-    selecting(id)
+    selecting(id);
   }
-  hasStones(){
+  hasStones() {
     return this.props.board[this.props.id].length > 0;
   }
   hasStonesOfCurrentPlayer() {
-    return boarding.isMyColor(this.props.board, this.props.currentPlayer, fromOut(this.props.id))
+    return boarding.isMyColor(this.props.board, this.props.currentPlayer, fromOut(this.props.id));
   }
   hasPossibleMoves() {
-    return this.possibleMoves().length > 0
+    return this.possibleMoves().length > 0;
   }
   // maybe better to name possibleDice
-  possibleMoves() { 
-    return this.props.openDice.filter((dice) => {
-      return boarding.mayMoveTo(this.props.board, this.props.currentPlayer, this.myID(), dice)
+  possibleMoves() {
+    return this.props.openDice.filter(dice => {
+      return boarding.mayMoveTo(this.props.board, this.props.currentPlayer, this.myID(), dice);
     });
-  }  
+  }
 
-  // if this is a selectable field  
+  // if this is a selectable field
   isPossibleDestination() {
-    return this.props.destinations.includes(this.myID())
+    return this.props.destinations.includes(this.myID());
   }
 
   render() {
-    const {selected, id, board, currentPlayer} = this.props
-    const isSelected = selected === id 
+    const { selected, id, board, currentPlayer } = this.props;
+    const isSelected = selected === id;
 
-    let tokens = board[id]
+    let tokens = board[id];
     tokens = tokens.map((token, index) => {
-      return <Token key={index} player={token} selected={isSelected && index === tokens.length-1} /> 
-    })
+      return (
+        <Token key={index} player={token} selected={isSelected && index === tokens.length - 1} />
+      );
+    });
 
-    if (this.isPossibleDestination() ) {
-      tokens.push(<Token key={tokens.length+1} 
-          player={currentPlayer} destination={true} />) 
+    if (this.isPossibleDestination()) {
+      tokens.push(<Token key={tokens.length + 1} player={currentPlayer} destination={true} />);
     }
     return (
-      <div id={"field-"+id}
-          className="field"
-          onClick={() => this.onClick(id)}
-          onDoubleClick={() => this.onDoubleClick(id)}>
+      <div
+        id={'field-' + id}
+        className="field"
+        onClick={() => this.onClick(id)}
+        onDoubleClick={() => this.onDoubleClick(id)}
+      >
         {tokens}
       </div>
     );

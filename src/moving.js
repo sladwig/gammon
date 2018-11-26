@@ -7,18 +7,22 @@
 
 const player = {
   isWhite(currentPlayer) {
-    return currentPlayer === "1"
+    return currentPlayer === '1';
   },
   isBlack(currentPlayer) {
-    return currentPlayer === "0"
-  }
-}
+    return currentPlayer === '0';
+  },
+};
 
-const moving = { 
+const moving = {
   direction(currentPlayer) {
-    if (player.isBlack(currentPlayer)) {return -1}
-    if (player.isWhite(currentPlayer)) {return 1}
-    return 0
+    if (player.isBlack(currentPlayer)) {
+      return -1;
+    }
+    if (player.isWhite(currentPlayer)) {
+      return 1;
+    }
+    return 0;
   },
 
   counterDirection(currentPlayer) {
@@ -26,12 +30,16 @@ const moving = {
   },
 
   from(currentPlayer, at, dice) {
-    return this.sanitizeTo((this.counterDirection(currentPlayer)) * dice + at);
+    return this.sanitizeTo(this.counterDirection(currentPlayer) * dice + at);
   },
 
   sanitizeTo(to) {
-    if (to < 0) { to = 0 }
-    if (to > 25) { to = 25 }
+    if (to < 0) {
+      to = 0;
+    }
+    if (to > 25) {
+      to = 25;
+    }
     return to;
   },
 
@@ -47,15 +55,13 @@ const moving = {
     if (player.isWhite(currentPlayer)) {
       return this.to(currentPlayer, 0, dice);
     }
-    return 26; // maybe returning false is ok 
+    return 26; // maybe returning false is ok
   },
 
   distance(from, to) {
     return Math.abs(from - to);
-  }
+  },
+};
 
-}
-
-
-export { moving as default, player};
+export { moving as default, player };
 // {cameFrom, moveTo, moveDirection};

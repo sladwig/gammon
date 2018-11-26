@@ -1,11 +1,11 @@
 import React from 'react';
 import DiceArea from './DiceArea';
-import './BackgammonBoard.css'
+import './BackgammonBoard.css';
 import Field from './Field';
 import Bar from './Bar';
 import Out from './Out';
-import moving from './moving'
-import boarding from './boarding'
+import moving from './moving';
+import boarding from './boarding';
 
 class BackgammonBoard extends React.Component {
   constructor(props) {
@@ -13,39 +13,34 @@ class BackgammonBoard extends React.Component {
     this.state = { selected: null, destinations: [] };
   }
 
-  rollTheDice = (player) => {
+  rollTheDice = player => {
     if (this.props.G.openDice.length < 2) {
-      this.props.moves.rollDice(player)
+      this.props.moves.rollDice(player);
     }
-  }
+  };
   makeMove = (from, dice) => {
-    this.props.moves.moveStone(from, dice)
-    this.selecting(null)
-  }
-  selecting = (at) => {
+    this.props.moves.moveStone(from, dice);
+    this.selecting(null);
+  };
+  selecting = at => {
     if (at === null) {
-      this.setState({selected: null, destinations: []})
-      return
+      this.setState({ selected: null, destinations: [] });
+      return;
     }
-    const {currentPlayer} = this.props.ctx
-    const {openDice, board} = this.props.G
+    const { currentPlayer } = this.props.ctx;
+    const { openDice, board } = this.props.G;
 
-    let destinations = openDice.filter(
-      (dice) => 
-      boarding.mayMoveTo(board, currentPlayer, at, dice)
-    ).map((dice) => 
-      moving.to(currentPlayer, at, dice)
-    )
+    let destinations = openDice
+      .filter(dice => boarding.mayMoveTo(board, currentPlayer, at, dice))
+      .map(dice => moving.to(currentPlayer, at, dice));
 
-    this.setState({selected: at, destinations: destinations})
-  }
-
-
+    this.setState({ selected: at, destinations: destinations });
+  };
 
   render() {
-    const {openDice, board} = this.props.G
-    const {currentPlayer, gameover} = this.props.ctx
-    const {selected, destinations} = this.state
+    const { openDice, board } = this.props.G;
+    const { currentPlayer, gameover } = this.props.ctx;
+    const { selected, destinations } = this.state;
 
     const fieldProps = {
       currentPlayer: currentPlayer,
@@ -55,28 +50,28 @@ class BackgammonBoard extends React.Component {
       destinations: destinations,
       selecting: this.selecting,
       makeMove: this.makeMove,
-    }
+    };
 
     const diceAreaProps = {
       openDice: openDice,
       onClick: this.rollTheDice,
       currentPlayer: currentPlayer,
       winner: gameover,
-    }
+    };
 
     // create Fields
-    let fieldsNumbers = Array.from(Array(24),(_,i)=>i+1)
-    let fields = [...fieldsNumbers.slice(12), ...fieldsNumbers.slice(0,12).reverse()]
+    let fieldsNumbers = Array.from(Array(24), (_, i) => i + 1);
+    let fields = [...fieldsNumbers.slice(12), ...fieldsNumbers.slice(0, 12).reverse()];
 
-    fields = fields.map(i=> <Field key={i} id={i} {...fieldProps} />)
+    fields = fields.map(i => <Field key={i} id={i} {...fieldProps} />);
 
     return (
       <div className="board">
-        <div className="left"></div>
+        <div className="left" />
         <Bar id={26} {...fieldProps} />
         <div className="right">
           <Out id={25} {...fieldProps} />
-          <div className="spacefill"></div>
+          <div className="spacefill" />
           <Out id={0} {...fieldProps} />
         </div>
         <DiceArea player="1" {...diceAreaProps} />
