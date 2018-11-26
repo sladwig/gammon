@@ -1,24 +1,24 @@
 .board {
   display: grid;
   grid-template-columns: repeat(15, 1fr);
-  grid-template-rows: repeat(11, 1fr);  
+  grid-template-rows: repeat(11, 1fr);
   grid-gap: 5px;
   height: 100%;
   background: rgba(219, 205, 165, 1);
 }
-.bar, .left, .right {
+.bar,
+.left,
+.right {
   background: rgba(210, 195, 155, 1);
 }
 
-.left{
+.left {
   display: flex;
   flex-direction: column;
-  
+
   grid-column: 1 / 2;
-  grid-row: 1 / 12;        
+  grid-row: 1 / 12;
 }
-
-
 
 .bar {
   grid-column: 8 / 9;
@@ -32,12 +32,9 @@
   margin: 5px 0 5px 0;
 }
 
-
-
-
-.right{
+.right {
   grid-column: 15 / 16;
-  grid-row: 1 / 12;                
+  grid-row: 1 / 12;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -58,9 +55,9 @@
 }
 .out .token {
   margin: 1px 0 1px 0;
-  height:16px;
+  height: 16px;
   width: 50px;
-  border-radius: 3px
+  border-radius: 3px;
 }
 .out.black {
   flex-direction: column-reverse;
