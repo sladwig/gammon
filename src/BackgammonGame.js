@@ -2,7 +2,6 @@ import {Game} from 'boardgame.io/core';
 import moving from './moving';
 import boarding from './boarding';
 import boardPosition from './boardPosition';
-import Random from './Dice';
 
 // for testing scenarios
 // import generateBoard from './generateBoard';
@@ -10,7 +9,7 @@ import Random from './Dice';
 
 function IsVictory(board) {
   // Return true if `stones` is in a winning configuration.
-  return board[0].length === 15 || board[25].length === 15 
+  return board[0].length === 15 || board[25].length === 15
 }
 
 function fromOut(id) {
@@ -23,7 +22,7 @@ function nextPlayer(currentPlayer) {
 }
 function isFirstTurn(ctx) { return ctx.turn === 0 }
 function playerRolledDice(openDice, player) {
-  return openDice.map((dice) => ( dice[0])).includes(player) 
+  return openDice.map((dice) => dice[0]).includes(player)
 }
 function isSameDice(openDice) {
   if (openDice.length < 2) return false
@@ -37,17 +36,17 @@ function hasRolledDice(openDice) {
 }
 function moveStoneOn(board, from, to) {
   // instead of pushing and poping
-  // we create a new 'clone' of the arrays 
+  // we create a new 'clone' of the arrays
   let popping = board[from].slice(-1)
   board[to] = [...board[to], ...popping]
   board[from] = board[from].slice(0, -1)
 }
 const withoutIndex = (array, at) => ([...array.slice(0,at), ...array.slice(++at)])
-
+const isPasch = (dices) => dices[0] === dices[1]
 
 const Backgammon = Game({
   name: 'backgammon',
-  
+
   setup: () => ({
     openDice: [],
     board: boardPosition.start,
@@ -55,21 +54,21 @@ const Backgammon = Game({
   }),
 
   moves: {
-    rollDice(G, ctx, player) {
+    rollDice(G, ctx, player, random) {
+      random = random || ctx.random
       let openDice = [...G.openDice]; // don't mutate original
 
       // first turn both are playing for first move
       if (isFirstTurn(ctx)) {
         if (!playerRolledDice(openDice, player)) {
-          openDice.push([player, Random.D6()])
+          openDice.push([player, random.D6()])
         }
-
-      // otherwise roll two dice
       } else {
-        openDice = [Random.D6(),Random.D6()]
+        // otherwise roll two dice
+        openDice = [random.D6(),random.D6()]
 
         // 4 moves if the eyes are equal
-        if (openDice[0] === openDice[1]) {
+        if (isPasch(openDice)) {
           openDice.push(openDice[0], openDice[0])
         }
       }
@@ -88,7 +87,7 @@ const Backgammon = Game({
       if (!boarding.mayMoveTo(board, currentPlayer, at, dice)) {return {...G}}
 
       let to = moving.to(currentPlayer, at, dice)
-      
+
       // throw out
       if (!boarding.isMyColor(board, currentPlayer, to) &&
         boarding.exactlyOne(board, to)) {
@@ -107,7 +106,7 @@ const Backgammon = Game({
       }
 
       // remove actual dice from open Dice
-      let firstIndex = openDice.findIndex((result) => (result === dice)) 
+      let firstIndex = openDice.findIndex((result) => (result === dice))
       openDice.splice(firstIndex, 1)
 
       return {...G, board, openDice};      // don't mutate original state.
@@ -131,9 +130,9 @@ const Backgammon = Game({
         endTurnIf: (G, ctx) => {
           if (!G.winnerFirstRound) return false
 
-          let player = ctx.currentPlayer === "any" ? G.winnerFirstRound: ctx.currentPlayer
+          let player = ctx.currentPlayer === "any" ? G.winnerFirstRound : ctx.currentPlayer
 
-          return !boarding.hasPossibleMoves(G.board, player, G.openDice) 
+          return !boarding.hasPossibleMoves(G.board, player, G.openDice)
         },
         onMove: (G, ctx) => {
           // only in first turn
@@ -144,7 +143,7 @@ const Backgammon = Game({
           if (!hasRolledDice(openDice)) return {...G};
           // roll again if same dice
           if (isSameDice(openDice)) return {...G, openDice: []}
-                    
+
           // determine winner
           let winnerFirstRound = openDice[0][1] < openDice[1][1] ? openDice[1][0] : openDice[0][0]
           openDice = openDice.map((dice) => dice[1])
@@ -158,14 +157,14 @@ const Backgammon = Game({
           },
           next: (G, ctx) => {
             if ((isFirstTurn(ctx) && hasTwoDice(G.openDice)) || (isFirstTurn(ctx) && ctx.currentPlayer === "any")) {
-              return nextPlayer(G.winnerFirstRound) 
+              return nextPlayer(G.winnerFirstRound)
             }
             return nextPlayer(ctx.currentPlayer)
           },
         },
       },
       {
-        name: 'movingStones', 
+        name: 'movingStones',
         allowedMoves: ['moveStone'],
         endPhaseIf: (G, ctx) => {
           return !boarding.hasPossibleMoves(G.board, ctx.currentPlayer, G.openDice)
