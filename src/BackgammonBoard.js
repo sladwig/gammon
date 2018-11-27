@@ -37,12 +37,18 @@ class BackgammonBoard extends React.Component {
     this.setState({ selected: at, destinations: destinations });
   };
 
-  render() {
+  getFields() {
+    let fieldsNumbers = Array.from(Array(24), (_, i) => i + 1);
+    let fields = [...fieldsNumbers.slice(12), ...fieldsNumbers.slice(0, 12).reverse()];
+    return fields.map(i => <Field key={i} id={i} {...fieldProps} />);
+  }
+
+  getFieldProps() {
+    const { currentPlayer } = this.props.ctx;
     const { openDice, board } = this.props.G;
-    const { currentPlayer, gameover } = this.props.ctx;
     const { selected, destinations } = this.state;
 
-    const fieldProps = {
+    return {
       currentPlayer: currentPlayer,
       openDice: openDice,
       board: board,
@@ -51,19 +57,23 @@ class BackgammonBoard extends React.Component {
       selecting: this.selecting,
       makeMove: this.makeMove,
     };
+  }
 
-    const diceAreaProps = {
+  getDiceProps() {
+    const { opendice } = this.props.G;
+    const { currentPlayer, gameover } = this.props.ctx;
+    return {
       openDice: openDice,
       onClick: this.rollTheDice,
       currentPlayer: currentPlayer,
       winner: gameover,
     };
+  }
 
-    // create Fields
-    let fieldsNumbers = Array.from(Array(24), (_, i) => i + 1);
-    let fields = [...fieldsNumbers.slice(12), ...fieldsNumbers.slice(0, 12).reverse()];
-
-    fields = fields.map(i => <Field key={i} id={i} {...fieldProps} />);
+  render() {
+    const fieldProps = this.getFieldProps();
+    const diceAreaProps = this.getDiceProps();
+    const fields = this.getFields();
 
     return (
       <div className="board">
