@@ -73,18 +73,10 @@ class Field extends React.Component {
     // else try to select
     this.trySelecting(this.myID());
   }
-  onDoubleClick(id) {
+  handleIsHomeAndWantsOut() {
     const selected = this.myID();
-    const possibleMoves = this.possibleMoves();
     const { makeMove, openDice, board, currentPlayer } = this.props;
 
-    // move if there is just one possible move
-    // or move if we have a pasch
-    if (justOne(possibleMoves) || allSame(possibleMoves)) {
-      return makeMove(selected, possibleMoves[0]);
-    }
-
-    if (!boarding.isHome(board, currentPlayer)) return;
     // move if isHome and ...
     // ... direct out with a dice
     const distanceHome = moving.distance(out(currentPlayer), selected);
@@ -98,6 +90,19 @@ class Field extends React.Component {
     if (boarding.isBiggestStone(board, currentPlayer, selected) && higherDice) {
       return makeMove(selected, higherDice);
     }
+  }
+  onDoubleClick(id) {
+    const selected = this.myID();
+    const possibleMoves = this.possibleMoves();
+    const { makeMove, board, currentPlayer } = this.props;
+
+    // move if there is just one possible move
+    // or move if we have a pasch
+    if (justOne(possibleMoves) || allSame(possibleMoves)) {
+      return makeMove(selected, possibleMoves[0]);
+    }
+
+    if (boarding.isHome(board, currentPlayer)) this.handleIsHomeAndWantsOut();
   }
   myID() {
     const { id, currentPlayer } = this.props;
