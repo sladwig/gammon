@@ -27,6 +27,12 @@ function allSame(possibleMoves) {
   if (possibleMoves.length < 2) return false;
   return possibleMoves[0] === possibleMoves[1];
 }
+function getHigherDiceThanDistance(dices, distance) {
+  return dices
+    .sort()
+    .reverse()
+    .find(dice => dice > distance);
+}
 
 class Field extends React.Component {
   onClick(id) {
@@ -68,36 +74,29 @@ class Field extends React.Component {
     this.trySelecting(this.myID());
   }
   onDoubleClick(id) {
-    let selected = this.myID();
-    let possibleMoves = this.possibleMoves();
+    const selected = this.myID();
+    const possibleMoves = this.possibleMoves();
     const { makeMove, openDice, board, currentPlayer } = this.props;
 
     // move if there is just one possible move
     // or move if we have a pasch
     if (justOne(possibleMoves) || allSame(possibleMoves)) {
-      makeMove(selected, possibleMoves[0]);
-      return;
+      return makeMove(selected, possibleMoves[0]);
     }
 
+    if (!boarding.isHome(board, currentPlayer)) return;
     // move if isHome and ...
-    if (boarding.isHome(board, currentPlayer)) {
-      // ... direct out with a dice
-      let distanceHome = moving.distance(out(currentPlayer), selected);
-      if (openDice.includes(distanceHome)) {
-        makeMove(selected, distanceHome);
-        return;
-      }
+    // ... direct out with a dice
+    const distanceHome = moving.distance(out(currentPlayer), selected);
+    if (openDice.includes(distanceHome)) {
+      return makeMove(selected, distanceHome);
+    }
 
-      // ... isBiggestStone and we have a higher dice than distance home
-      // always use the biggest dice
-      let higherDice = openDice
-        .sort()
-        .reverse()
-        .find(dice => dice > distanceHome);
-      if (boarding.isBiggestStone(board, currentPlayer, selected) && higherDice) {
-        makeMove(selected, higherDice);
-        return;
-      }
+    // ... isBiggestStone and we have a higher dice than distance home
+    // always use the biggest dice
+    let higherDice = getHigherDiceThanDistance(openDice, distanceHome);
+    if (boarding.isBiggestStone(board, currentPlayer, selected) && higherDice) {
+      return makeMove(selected, higherDice);
     }
   }
   myID() {
