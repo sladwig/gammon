@@ -40,7 +40,7 @@ class BackgammonBoard extends React.Component {
   getFields() {
     let fieldsNumbers = Array.from(Array(24), (_, i) => i + 1);
     let fields = [...fieldsNumbers.slice(12), ...fieldsNumbers.slice(0, 12).reverse()];
-    return fields.map(i => <Field key={i} id={i} {...fieldProps} />);
+    return fields.map(i => <Field key={i} id={i} {...this.getFieldProps()} />);
   }
 
   getFieldProps() {
@@ -60,7 +60,7 @@ class BackgammonBoard extends React.Component {
   }
 
   getDiceProps() {
-    const { opendice } = this.props.G;
+    const { openDice } = this.props.G;
     const { currentPlayer, gameover } = this.props.ctx;
     return {
       openDice: openDice,
