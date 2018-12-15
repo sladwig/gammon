@@ -18,7 +18,7 @@ function fromOut(id) {
 }
 
 function nextPlayer(currentPlayer) {
-  return (+parseInt(currentPlayer, 10) + 1) % 2 + '';
+  return ((+parseInt(currentPlayer, 10) + 1) % 2) + '';
 }
 function isFirstTurn(ctx) {
   return ctx.turn === 0;
@@ -46,6 +46,24 @@ function moveStoneOn(board, from, to) {
 const withoutIndex = (array, at) => [...array.slice(0, at), ...array.slice(++at)];
 const isPasch = dices => dices[0] === dices[1];
 
+const handleFirstTurnDiceRoll = (random, openDice, player) => {
+  // first turn both are playing for first move
+  if (!playerRolledDice(openDice, player)) {
+    openDice.push([player, random.D6()]);
+  }
+};
+
+const diceRoll = random => {
+  // otherwise roll two dice
+  let roll = [random.D6(), random.D6()];
+
+  // 4 moves if the eyes are equal
+  if (isPasch(roll)) {
+    roll.push(roll[0], roll[0]);
+  }
+  return roll;
+};
+
 const Backgammon = Game({
   name: 'backgammon',
 
@@ -60,19 +78,10 @@ const Backgammon = Game({
       random = random || ctx.random;
       let openDice = [...G.openDice]; // don't mutate original
 
-      // first turn both are playing for first move
       if (isFirstTurn(ctx)) {
-        if (!playerRolledDice(openDice, player)) {
-          openDice.push([player, random.D6()]);
-        }
+        handleFirstTurnDiceRoll(random, openDice, player);
       } else {
-        // otherwise roll two dice
-        openDice = [random.D6(), random.D6()];
-
-        // 4 moves if the eyes are equal
-        if (isPasch(openDice)) {
-          openDice.push(openDice[0], openDice[0]);
-        }
+        openDice = diceRoll(random);
       }
       return { ...G, openDice }; // don't mutate original state.
     },
